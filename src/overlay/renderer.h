@@ -13,6 +13,9 @@ class Renderer {
   void BeginFrame();                // binds + clears the back buffer to fully transparent
   void EndFrame(bool vsync);        // Present; vsync while animating, immediate otherwise
 
+  // BGRA image → shader resource view for ImGui (caller releases). nullptr on failure.
+  ID3D11ShaderResourceView* CreateTexture(const void* bgra, int width, int height);
+
   ID3D11Device* Device() const { return device_; }
   ID3D11DeviceContext* Context() const { return context_; }
 

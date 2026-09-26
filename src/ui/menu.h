@@ -8,6 +8,7 @@
 #include "providers/game_select.h"
 #include "providers/ping.h"
 #include "ui/fonts.h"
+#include "ui/player.h"
 
 enum class Capture { None, MenuKey, ToggleKey };
 
@@ -20,6 +21,7 @@ struct MenuContext {
   EtwStatus etw;
   Capture capture;
   std::string keyError;
+  const PlayerData* player;
 };
 
 struct MenuEvents {
@@ -36,6 +38,7 @@ class Menu {
 
  private:
   void TabOverlay(MenuContext& ctx, MenuEvents& ev);
+  void TabMusic(MenuContext& ctx, MenuEvents& ev);
   void TabGame(MenuContext& ctx, MenuEvents& ev);
   void TabTheme(MenuContext& ctx, MenuEvents& ev);
   void TabFont(MenuContext& ctx, MenuEvents& ev);

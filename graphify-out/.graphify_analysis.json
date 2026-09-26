@@ -1,48 +1,30 @@
 {
   "communities": {
     "0": [
-      "boolean",
+      "deque",
       "etw_session",
       "fps",
-      "guid",
       "imgui",
+      "map",
+      "media",
+      "memory",
       "ping",
+      "player",
+      "pwstr",
       "socket",
       "src_app_h_src_app",
       "src_app_h_string",
+      "src_app_info",
       "src_config_config_h_src_config_config",
       "src_input_hotkeys_h_src_input_hotkeys",
       "src_main",
-      "src_overlay_window_h_src_overlay_window",
-      "src_providers_etw_session_cpp_byte",
-      "src_providers_etw_session_cpp_fpsprovider",
-      "src_providers_etw_session_cpp_pevent_record",
-      "src_providers_etw_session_cpp_pingprovider",
-      "src_providers_etw_session_cpp_src_providers_etw_session",
-      "src_providers_etw_session_cpp_ulonglong",
-      "src_providers_etw_session_cpp_vector",
-      "src_providers_etw_session_etwsession",
-      "src_providers_etw_session_etwsession_enablenetwork",
-      "src_providers_etw_session_etwsession_enableprovider",
-      "src_providers_etw_session_etwsession_networkenabled",
-      "src_providers_etw_session_etwsession_onevent",
-      "src_providers_etw_session_etwsession_session",
-      "src_providers_etw_session_etwsession_start",
-      "src_providers_etw_session_etwsession_status",
-      "src_providers_etw_session_etwsession_stop",
-      "src_providers_etw_session_etwsession_thread",
-      "src_providers_etw_session_etwsession_trace",
-      "src_providers_etw_session_eventidfilter",
-      "src_providers_etw_session_eventidfilter_count",
-      "src_providers_etw_session_eventidfilter_events",
-      "src_providers_etw_session_eventidfilter_filterin",
-      "src_providers_etw_session_eventidfilter_reserved",
+      "src_main_cpp_hinstance",
+      "src_main_wwinmain",
+      "src_providers_clock_h_src_providers_clock",
       "src_providers_etw_session_fpsprovider",
       "src_providers_etw_session_h_atomic",
-      "src_providers_etw_session_h_etwstatus",
       "src_providers_etw_session_h_src_providers_etw_session",
       "src_providers_etw_session_h_thread",
-      "src_providers_etw_session_makeproperties",
       "src_providers_etw_session_pingprovider",
       "src_providers_fps_h_array",
       "src_providers_fps_h_mutex",
@@ -50,9 +32,14 @@
       "src_providers_fps_h_unordered_map",
       "src_providers_game_select_h_src_providers_game_select",
       "src_providers_game_select_h_vector",
+      "src_providers_media_h_condition_variable",
+      "src_providers_media_h_src_providers_media",
       "src_providers_ping_h_src_providers_ping",
+      "src_ui_anim_easeoutcubic",
+      "src_ui_anim_h_src_ui_anim",
       "src_ui_fonts_h_src_ui_fonts",
       "src_ui_menu_h_src_ui_menu",
+      "src_ui_player_h_src_ui_player",
       "src_ui_theme_h_src_ui_theme",
       "src_ui_watermark_h_src_ui_watermark",
       "src_ui_widgets_h_src_ui_widgets",
@@ -62,9 +49,7 @@
       "tools_preview_stubs_windows",
       "tools_preview_stubs_winsock2",
       "tools_preview_stubs_ws2tcpip",
-      "tracehandle",
-      "uchar",
-      "ushort"
+      "watermark"
     ],
     "1": [
       "src_ui_menu_cpp_imdrawlist",
@@ -80,6 +65,7 @@
       "src_ui_menu_menu_tabfont",
       "src_ui_menu_menu_tabgame",
       "src_ui_menu_menu_tabkeybinds",
+      "src_ui_menu_menu_tabmusic",
       "src_ui_menu_menu_taboverlay",
       "src_ui_menu_menu_tabtheme",
       "src_ui_menu_menucontext",
@@ -91,6 +77,7 @@
       "src_ui_menu_menucontext_games",
       "src_ui_menu_menucontext_keyerror",
       "src_ui_menu_menucontext_ping",
+      "src_ui_menu_menucontext_player",
       "src_ui_menu_menuevents",
       "src_ui_menu_menuevents_cancelcapture",
       "src_ui_menu_menuevents_changed",
@@ -117,8 +104,7 @@
       "src_ui_widgets_selectrow",
       "src_ui_widgets_slider",
       "src_ui_widgets_textfield",
-      "src_ui_widgets_toggle",
-      "widgets"
+      "src_ui_widgets_toggle"
     ],
     "2": [
       "src_ui_watermark_cpp_imdrawlist",
@@ -133,6 +119,7 @@
       "src_ui_watermark_iconclock",
       "src_ui_watermark_iconsignal",
       "src_ui_watermark_iconuser",
+      "src_ui_watermark_panel",
       "src_ui_watermark_pen",
       "src_ui_watermark_pen_digitcell",
       "src_ui_watermark_pen_dl",
@@ -165,6 +152,7 @@
       "src_ui_watermark_watermarkstyle_theme"
     ],
     "3": [
+      "algorithm",
       "clock",
       "corner",
       "cstdio",
@@ -185,10 +173,15 @@
       "src_config_config_config_opacity",
       "src_config_config_config_overlayvisible",
       "src_config_config_config_pinnedexe",
+      "src_config_config_config_playerhidewhenidle",
+      "src_config_config_config_playerspotifyonly",
+      "src_config_config_config_playerx",
+      "src_config_config_config_playery",
       "src_config_config_config_save",
       "src_config_config_config_showfps",
       "src_config_config_config_showlow",
       "src_config_config_config_showping",
+      "src_config_config_config_showplayer",
       "src_config_config_config_showtime",
       "src_config_config_config_showuser",
       "src_config_config_config_theme",
@@ -236,20 +229,25 @@
       "tools_preview_preview_canvas_tri",
       "tools_preview_preview_canvas_w",
       "tools_preview_preview_cpp_imfont",
+      "tools_preview_preview_cpp_imtextureid",
       "tools_preview_preview_cpp_string",
       "tools_preview_preview_cpp_vector",
+      "tools_preview_preview_fakecover",
       "tools_preview_preview_fonts_load",
       "tools_preview_preview_hotkeyname",
       "tools_preview_preview_loadfile",
       "tools_preview_preview_main",
       "tools_preview_preview_sampledata",
+      "tools_preview_preview_sampleplayer",
       "tools_preview_preview_servicetextures",
-      "watermark"
+      "widgets"
     ],
     "5": [
       "src_app_app",
       "src_app_app_animating",
       "src_app_app_appliedtheme",
+      "src_app_app_artsrv",
+      "src_app_app_artversion",
       "src_app_app_capture",
       "src_app_app_cfg",
       "src_app_app_cfgdirty",
@@ -263,12 +261,16 @@
       "src_app_app_keyerror",
       "src_app_app_lastsecond",
       "src_app_app_lastsignature",
+      "src_app_app_media",
       "src_app_app_menu",
       "src_app_app_menuopen",
       "src_app_app_menut",
       "src_app_app_needredraw",
       "src_app_app_ping",
+      "src_app_app_player",
       "src_app_app_prevforeground",
+      "src_app_app_refreshhz",
+      "src_app_app_refreshmonitor",
       "src_app_app_renderer",
       "src_app_app_running",
       "src_app_app_scale",
@@ -281,7 +283,9 @@
       "src_app_app_wndproc",
       "src_app_h_capture",
       "src_app_h_fpsprovider",
+      "src_app_h_hmonitor",
       "src_app_h_hwnd",
+      "src_app_h_id3d11shaderresourceview",
       "src_app_h_pingprovider",
       "src_app_h_uint"
     ],
@@ -323,7 +327,6 @@
       "src_ui_widgets_h_imfont"
     ],
     "7": [
-      "algorithm",
       "d3d11",
       "dcomp",
       "dxgi1_2",
@@ -335,12 +338,14 @@
       "idcompositionvisual",
       "idxgiswapchain1",
       "src_overlay_renderer_cpp_hwnd",
+      "src_overlay_renderer_cpp_id3d11shaderresourceview",
       "src_overlay_renderer_cpp_src_overlay_renderer",
       "src_overlay_renderer_h_src_overlay_renderer",
       "src_overlay_renderer_renderer",
       "src_overlay_renderer_renderer_beginframe",
       "src_overlay_renderer_renderer_context",
       "src_overlay_renderer_renderer_createtarget",
+      "src_overlay_renderer_renderer_createtexture",
       "src_overlay_renderer_renderer_dcomp",
       "src_overlay_renderer_renderer_dcomptarget",
       "src_overlay_renderer_renderer_dcompvisual",
@@ -392,10 +397,8 @@
       "src_util_win_qpcseconds"
     ],
     "9": [
-      "condition_variable",
-      "deque",
-      "map",
       "src_providers_ping_h_atomic",
+      "src_providers_ping_h_condition_variable",
       "src_providers_ping_h_dword",
       "src_providers_ping_h_mutex",
       "src_providers_ping_h_thread",
@@ -417,12 +420,12 @@
       "src_providers_ping_pingprovider_traffic"
     ],
     "10": [
-      "src_app_info",
       "src_overlay_window_cpp_hinstance",
       "src_overlay_window_cpp_rect",
       "src_overlay_window_cpp_src_overlay_window",
       "src_overlay_window_h_hwnd",
       "src_overlay_window_h_rect",
+      "src_overlay_window_h_src_overlay_window",
       "src_overlay_window_overlaywindow",
       "src_overlay_window_overlaywindow_create",
       "src_overlay_window_overlaywindow_destroy",
@@ -453,31 +456,6 @@
       "src_providers_game_select_findwindowctx_best",
       "src_providers_game_select_findwindowctx_bestarea",
       "src_providers_game_select_findwindowctx_pid",
-      "src_providers_game_select_gameselector_update",
-      "src_providers_game_select_isexcluded",
-      "tlhelp32"
-    ],
-    "12": [
-      "icmpapi",
-      "iphlpapi",
-      "src_providers_ping_cpp_byte",
-      "src_providers_ping_cpp_dword",
-      "src_providers_ping_cpp_pevent_record",
-      "src_providers_ping_cpp_src_providers_ping",
-      "src_providers_ping_cpp_string",
-      "src_providers_ping_endpointtext",
-      "src_providers_ping_isprivate",
-      "src_providers_ping_pingprovider_echo",
-      "src_providers_ping_pingprovider_onnetworksend",
-      "src_providers_ping_pingprovider_pickendpoint",
-      "src_providers_ping_pingprovider_settarget",
-      "src_providers_ping_pingprovider_start",
-      "src_providers_ping_pingprovider_stop",
-      "src_providers_ping_pingprovider_worker",
-      "tdh"
-    ],
-    "13": [
-      "hmonitor",
       "src_providers_game_select_gameentry",
       "src_providers_game_select_gameentry_exe",
       "src_providers_game_select_gameentry_fps",
@@ -488,24 +466,105 @@
       "src_providers_game_select_gameselector_monitor",
       "src_providers_game_select_gameselector_names",
       "src_providers_game_select_gameselector_pid",
+      "src_providers_game_select_gameselector_refreshnames",
+      "src_providers_game_select_gameselector_update",
       "src_providers_game_select_h_dword",
+      "src_providers_game_select_h_hmonitor",
       "src_providers_game_select_h_string",
-      "src_providers_game_select_h_unordered_map"
+      "src_providers_game_select_h_unordered_map",
+      "src_providers_game_select_isexcluded",
+      "src_util_win_h_string",
+      "src_util_win_h_wstring",
+      "src_util_win_utf8towide",
+      "src_util_win_widetoutf8",
+      "tlhelp32",
+      "wchar_t"
+    ],
+    "12": [
+      "icmpapi",
+      "iphlpapi",
+      "src_providers_ping_cpp_byte",
+      "src_providers_ping_cpp_src_providers_ping",
+      "src_providers_ping_cpp_string",
+      "src_providers_ping_endpointtext",
+      "src_providers_ping_isprivate",
+      "src_providers_ping_pingprovider_echo",
+      "src_providers_ping_pingprovider_pickendpoint",
+      "src_providers_ping_pingprovider_start",
+      "src_providers_ping_pingprovider_stop",
+      "src_providers_ping_pingprovider_worker",
+      "tdh"
+    ],
+    "13": [
+      "chrono",
+      "cwctype",
+      "globalsystemmediatransportcontrolssession",
+      "irandomaccessstreamreference",
+      "shcore",
+      "src_providers_media_cpp_mediacommand",
+      "src_providers_media_cpp_shared_ptr",
+      "src_providers_media_cpp_src_providers_media",
+      "src_providers_media_decodeart",
+      "src_providers_media_h_longlong",
+      "src_providers_media_h_mediacommand",
+      "src_providers_media_h_mutex",
+      "src_providers_media_h_shared_ptr",
+      "src_providers_media_h_string",
+      "src_providers_media_h_thread",
+      "src_providers_media_h_vector",
+      "src_providers_media_isspotify",
+      "src_providers_media_mediaart",
+      "src_providers_media_mediaart_bgra",
+      "src_providers_media_mediaart_height",
+      "src_providers_media_mediaart_width",
+      "src_providers_media_mediaprovider",
+      "src_providers_media_mediaprovider_configure",
+      "src_providers_media_mediaprovider_cv",
+      "src_providers_media_mediaprovider_enabled",
+      "src_providers_media_mediaprovider_mu",
+      "src_providers_media_mediaprovider_pending",
+      "src_providers_media_mediaprovider_running",
+      "src_providers_media_mediaprovider_send",
+      "src_providers_media_mediaprovider_snapshot",
+      "src_providers_media_mediaprovider_spotifyonly",
+      "src_providers_media_mediaprovider_start",
+      "src_providers_media_mediaprovider_state",
+      "src_providers_media_mediaprovider_stop",
+      "src_providers_media_mediaprovider_thread",
+      "src_providers_media_mediaprovider_worker",
+      "src_providers_media_mediastate",
+      "src_providers_media_mediastate_active",
+      "src_providers_media_mediastate_art",
+      "src_providers_media_mediastate_artist",
+      "src_providers_media_mediastate_artversion",
+      "src_providers_media_mediastate_durationsec",
+      "src_providers_media_mediastate_playing",
+      "src_providers_media_mediastate_positionsec",
+      "src_providers_media_mediastate_sampledqpc",
+      "src_providers_media_mediastate_title",
+      "unknwn",
+      "wincodec"
     ],
     "14": [
-      "pwstr",
+      "imgui_impl_dx11",
+      "imgui_impl_win32",
+      "shellapi",
+      "src_app_app_closemenu",
       "src_app_app_msuntilnexttick",
+      "src_app_app_openmenu",
       "src_app_app_render",
       "src_app_app_run",
+      "src_app_app_saveifdirty",
       "src_app_app_startcapture",
       "src_app_app_tick",
+      "src_app_app_toggleoverlay",
       "src_app_app_trayadd",
+      "src_app_app_traymenu",
       "src_app_app_trayremove",
       "src_app_cpp_capture",
       "src_app_cpp_dword",
       "src_app_cpp_hinstance",
-      "src_main_cpp_hinstance",
-      "src_main_wwinmain"
+      "src_app_cpp_src_app"
     ],
     "15": [
       "anim",
@@ -536,18 +595,52 @@
       "src_input_hotkeys_hotkeys_unregisterall"
     ],
     "17": [
-      "imgui_impl_dx11",
-      "imgui_impl_win32",
-      "shellapi",
-      "src_app_app_closemenu",
-      "src_app_app_openmenu",
-      "src_app_app_saveifdirty",
-      "src_app_app_toggleoverlay",
-      "src_app_app_traymenu",
-      "src_app_cpp_src_app",
-      "src_providers_clock_h_src_providers_clock",
-      "src_ui_anim_easeoutcubic",
-      "src_ui_anim_h_src_ui_anim"
+      "src_ui_player_buttoncenters",
+      "src_ui_player_cpp_imdrawlist",
+      "src_ui_player_cpp_imfont",
+      "src_ui_player_cpp_imu32",
+      "src_ui_player_cpp_imvec2",
+      "src_ui_player_cpp_src_ui_player",
+      "src_ui_player_cpp_string",
+      "src_ui_player_draw",
+      "src_ui_player_fit",
+      "src_ui_player_formattime",
+      "src_ui_player_h_imtextureid",
+      "src_ui_player_h_mediacommand",
+      "src_ui_player_h_string",
+      "src_ui_player_hover",
+      "src_ui_player_hover_card",
+      "src_ui_player_hover_next",
+      "src_ui_player_hover_play",
+      "src_ui_player_hover_prev",
+      "src_ui_player_iconnext",
+      "src_ui_player_iconnote",
+      "src_ui_player_iconplaypause",
+      "src_ui_player_iconprev",
+      "src_ui_player_measure",
+      "src_ui_player_metrics",
+      "src_ui_player_metrics_art",
+      "src_ui_player_metrics_btn",
+      "src_ui_player_metrics_fs",
+      "src_ui_player_metrics_gap",
+      "src_ui_player_metrics_h",
+      "src_ui_player_metrics_pad",
+      "src_ui_player_metrics_w",
+      "src_ui_player_player",
+      "src_ui_player_playerdata",
+      "src_ui_player_playerdata_active",
+      "src_ui_player_playerdata_art",
+      "src_ui_player_playerdata_artist",
+      "src_ui_player_playerdata_duration",
+      "src_ui_player_playerdata_playing",
+      "src_ui_player_playerdata_position",
+      "src_ui_player_playerdata_signature",
+      "src_ui_player_playerdata_title",
+      "src_ui_player_playerevents",
+      "src_ui_player_playerevents_command",
+      "src_ui_player_playerevents_moved",
+      "src_ui_player_playerevents_released",
+      "src_ui_player_playersize"
     ],
     "18": [
       "lresult",
@@ -568,12 +661,36 @@
       "src_providers_ping_pingsample_state"
     ],
     "20": [
-      "src_providers_game_select_gameselector_refreshnames",
-      "src_util_win_h_string",
-      "src_util_win_h_wstring",
-      "src_util_win_utf8towide",
-      "src_util_win_widetoutf8",
-      "wchar_t"
+      "boolean",
+      "guid",
+      "src_providers_etw_session_cpp_byte",
+      "src_providers_etw_session_cpp_fpsprovider",
+      "src_providers_etw_session_cpp_pevent_record",
+      "src_providers_etw_session_cpp_pingprovider",
+      "src_providers_etw_session_cpp_src_providers_etw_session",
+      "src_providers_etw_session_cpp_ulonglong",
+      "src_providers_etw_session_cpp_vector",
+      "src_providers_etw_session_etwsession",
+      "src_providers_etw_session_etwsession_enablenetwork",
+      "src_providers_etw_session_etwsession_enableprovider",
+      "src_providers_etw_session_etwsession_networkenabled",
+      "src_providers_etw_session_etwsession_onevent",
+      "src_providers_etw_session_etwsession_session",
+      "src_providers_etw_session_etwsession_start",
+      "src_providers_etw_session_etwsession_status",
+      "src_providers_etw_session_etwsession_stop",
+      "src_providers_etw_session_etwsession_thread",
+      "src_providers_etw_session_etwsession_trace",
+      "src_providers_etw_session_eventidfilter",
+      "src_providers_etw_session_eventidfilter_count",
+      "src_providers_etw_session_eventidfilter_events",
+      "src_providers_etw_session_eventidfilter_filterin",
+      "src_providers_etw_session_eventidfilter_reserved",
+      "src_providers_etw_session_h_etwstatus",
+      "src_providers_etw_session_makeproperties",
+      "tracehandle",
+      "uchar",
+      "ushort"
     ],
     "21": [
       "src_providers_ping_endpoint",
@@ -603,40 +720,86 @@
       "src_providers_ping_traffic",
       "src_providers_ping_traffic_tcpbytes",
       "src_providers_ping_traffic_udpbytes"
+    ],
+    "25": [
+      "docs_plan",
+      "docs_plan_1_1_what_the_cheat_uis_actually_are",
+      "docs_plan_1_2_precedent_for_external_not_banned",
+      "docs_plan_1_3_where_each_number_comes_from_no_injection_no_kernel_driver",
+      "docs_plan_1_4_how_we_avoid_bans_the_rules",
+      "docs_plan_1_research_findings",
+      "docs_plan_2_5_visual_design_rules_anti_vibe_pass",
+      "docs_plan_2_proposed_architecture",
+      "docs_plan_3_milestones",
+      "docs_plan_4_open_questions_for_you",
+      "docs_plan_external_overlay_research_plan",
+      "progress",
+      "progress_2026_09_26_anti_vibe_design_pass_still_no_code",
+      "progress_2026_09_26_research_planning_no_code_yet",
+      "progress_2026_09_26_v0_2_0_spotify_player_installer",
+      "progress_2026_09_26_v1_built",
+      "progress_next",
+      "progress_progress"
+    ],
+    "26": [
+      "readme",
+      "readme_build",
+      "readme_features",
+      "readme_install",
+      "readme_known_limits",
+      "readme_qol_overlay",
+      "readme_why_it_doesn_t_get_you_banned"
+    ],
+    "27": [
+      "src_providers_ping_cpp_dword",
+      "src_providers_ping_pingprovider_settarget"
+    ],
+    "28": [
+      "src_providers_ping_cpp_pevent_record",
+      "src_providers_ping_pingprovider_onnetworksend"
     ]
   },
   "cohesion": {
-    "0": 0.05505952380952381,
-    "1": 0.08974358974358974,
-    "2": 0.06852497096399536,
-    "3": 0.05668016194331984,
-    "4": 0.06882591093117409,
-    "5": 0.05405405405405406,
+    "0": 0.07482993197278912,
+    "1": 0.09143686502177069,
+    "2": 0.07087486157253599,
+    "3": 0.048484848484848485,
+    "4": 0.06620209059233449,
+    "5": 0.044444444444444446,
     "6": 0.06722689075630252,
-    "7": 0.0928030303030303,
+    "7": 0.09269162210338681,
     "8": 0.11290322580645161,
-    "9": 0.08695652173913043,
+    "9": 0.09523809523809523,
     "10": 0.14210526315789473,
-    "11": 0.14705882352941177,
-    "12": 0.16176470588235295,
-    "13": 0.18681318681318682,
-    "14": 0.16666666666666666,
+    "11": 0.06756756756756757,
+    "12": 0.21794871794871795,
+    "13": 0.04964539007092199,
+    "14": 0.18128654970760233,
     "15": 0.18181818181818182,
     "16": 0.25757575757575757,
-    "17": 0.22727272727272727,
+    "17": 0.07536231884057971,
     "18": 0.47619047619047616,
     "19": 0.2857142857142857,
-    "20": 0.3333333333333333,
+    "20": 0.0896551724137931,
     "21": 0.3333333333333333,
     "22": 0.3333333333333333,
     "23": 0.6,
-    "24": 0.5
+    "24": 0.5,
+    "25": 0.1111111111111111,
+    "26": 0.2857142857142857,
+    "27": 1.0,
+    "28": 1.0
   },
   "gods": [
     {
       "id": "src_app_app",
       "label": "App",
-      "degree": 63
+      "degree": 73
+    },
+    {
+      "id": "src_config_config_config",
+      "label": "Config",
+      "degree": 37
     },
     {
       "id": "src_providers_ping_pingprovider",
@@ -644,9 +807,14 @@
       "degree": 36
     },
     {
-      "id": "src_config_config_config",
-      "label": "Config",
-      "degree": 32
+      "id": "src_overlay_renderer_renderer",
+      "label": "Renderer",
+      "degree": 27
+    },
+    {
+      "id": "src_ui_menu_menucontext",
+      "label": "MenuContext",
+      "degree": 26
     },
     {
       "id": "src_ui_theme_theme",
@@ -654,14 +822,9 @@
       "degree": 26
     },
     {
-      "id": "src_overlay_renderer_renderer",
-      "label": "Renderer",
-      "degree": 26
-    },
-    {
-      "id": "src_ui_menu_menucontext",
-      "label": "MenuContext",
-      "degree": 23
+      "id": "src_providers_media_mediaprovider",
+      "label": "MediaProvider",
+      "degree": 21
     },
     {
       "id": "src_ui_watermark_watermarkdata",
@@ -669,19 +832,14 @@
       "degree": 21
     },
     {
-      "id": "src_providers_etw_session_etwsession",
-      "label": "EtwSession",
-      "degree": 16
-    },
-    {
-      "id": "src_providers_game_select_gameselector",
-      "label": "GameSelector",
-      "degree": 16
-    },
-    {
       "id": "src_ui_theme_col",
       "label": "Col()",
-      "degree": 16
+      "degree": 19
+    },
+    {
+      "id": "src_ui_player_draw",
+      "label": "Draw()",
+      "degree": 18
     }
   ],
   "surprises": [
@@ -709,6 +867,28 @@
     },
     {
       "source": "main()",
+      "target": "Player()",
+      "source_files": [
+        "tools/preview/preview.cpp",
+        "src/ui/player.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "main()",
+      "target": "PlayerSize()",
+      "source_files": [
+        "tools/preview/preview.cpp",
+        "src/ui/player.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
+    },
+    {
+      "source": "main()",
       "target": "Watermark()",
       "source_files": [
         "tools/preview/preview.cpp",
@@ -717,65 +897,43 @@
       "confidence": "INFERRED",
       "relation": "calls",
       "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
-    },
-    {
-      "source": "main()",
-      "target": "ApplyImGuiStyle()",
-      "source_files": [
-        "tools/preview/preview.cpp",
-        "src/ui/theme.cpp"
-      ],
-      "confidence": "INFERRED",
-      "relation": "calls",
-      "why": "inferred connection - not explicitly stated in source; connects across different repos/directories; bridges separate communities"
-    },
-    {
-      "source": "HotkeyName()",
-      "target": "Hotkey",
-      "source_files": [
-        "tools/preview/preview.cpp",
-        "src/config/config.h"
-      ],
-      "confidence": "EXTRACTED",
-      "relation": "references",
-      "why": "connects across different repos/directories; bridges separate communities"
     }
   ],
   "questions": [
     {
       "type": "bridge_node",
-      "question": "Why does `App` connect `Community 5` to `Community 0`, `Community 1`, `Community 2`, `Community 3`, `Community 4`, `Community 6`, `Community 7`, `Community 10`, `Community 13`, `Community 14`, `Community 16`, `Community 17`, `Community 18`, `Community 23`?",
-      "why": "High betweenness centrality (0.336) - this node is a cross-community bridge."
+      "question": "Why does `App` connect `App` to `app.h`, `MenuContext`, `WatermarkData`, `Config`, `preview.cpp`, `Theme`, `Renderer`, `OverlayWindow`, `GameSelector`, `MediaProvider`, `app.cpp`, `Hotkeys`, `player.cpp`, `HandleMessage`, `EtwSession`, `HotkeyName`?",
+      "why": "High betweenness centrality (0.324) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `PingProvider` connect `Community 9` to `Community 0`, `Community 12`, `Community 19`, `Community 21`, `Community 22`, `Community 24`?",
-      "why": "High betweenness centrality (0.127) - this node is a cross-community bridge."
+      "question": "Why does `PingProvider` connect `PingProvider` to `app.h`, `ping.cpp`, `PingSample`, `Endpoint`, `Layout`, `Traffic`, `SetTarget`, `OnNetworkSend`?",
+      "why": "High betweenness centrality (0.099) - this node is a cross-community bridge."
     },
     {
       "type": "bridge_node",
-      "question": "Why does `Config` connect `Community 3` to `Community 0`, `Community 1`, `Community 4`, `Community 5`, `Community 16`?",
-      "why": "High betweenness centrality (0.105) - this node is a cross-community bridge."
+      "question": "Why does `Config` connect `Config` to `app.h`, `MenuContext`, `preview.cpp`, `App`, `Hotkeys`?",
+      "why": "High betweenness centrality (0.093) - this node is a cross-community bridge."
     },
     {
       "type": "isolated_nodes",
-      "question": "What connects `FpsProvider`, `PingProvider`, `networkEnabled_` to the rest of the system?",
-      "why": "182 weakly-connected nodes found - possible documentation gaps or missing edges."
+      "question": "What connects `FpsProvider`, `PingProvider`, `tab_` to the rest of the system?",
+      "why": "253 weakly-connected nodes found - possible documentation gaps or missing edges."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 0` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.05505952380952381 - nodes in this community are weakly interconnected."
+      "question": "Should `app.h` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07482993197278912 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 1` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.08974358974358974 - nodes in this community are weakly interconnected."
+      "question": "Should `MenuContext` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.09143686502177069 - nodes in this community are weakly interconnected."
     },
     {
       "type": "low_cohesion",
-      "question": "Should `Community 2` be split into smaller, more focused modules?",
-      "why": "Cohesion score 0.06852497096399536 - nodes in this community are weakly interconnected."
+      "question": "Should `WatermarkData` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.07087486157253599 - nodes in this community are weakly interconnected."
     }
   ]
 }

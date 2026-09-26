@@ -185,6 +185,13 @@ ImVec2 Watermark(ImDrawList* dl, ImVec2 pos, const WatermarkData& d, const Water
   const ImVec2 size(width, height);
   if (!draw) return size;
 
+  Panel(dl, pos, size, st, radius, 0.0f);
+  layout(true);
+  return size;
+}
+
+void Panel(ImDrawList* dl, ImVec2 pos, ImVec2 size, const WatermarkStyle& st, float radius, float highlight) {
+  const Theme& t = *st.theme;
   // Soft shadow (layered, cheap), translucent fill, hairline border and a faint top highlight.
   for (int i = 3; i >= 1; --i) {
     const float e = static_cast<float>(i) * 2.0f;
@@ -192,9 +199,8 @@ ImVec2 Watermark(ImDrawList* dl, ImVec2 pos, const WatermarkData& d, const Water
                       radius + e);
   }
   dl->AddRectFilled(pos, pos + size, Col(t.crust, st.opacity), radius);
-  dl->AddRect(pos, pos + size, Col(t.overlay, 0.35f), radius, 1.0f);
+  dl->AddRect(pos, pos + size, Col(Mix(t.overlay, t.accent, highlight), 0.35f + 0.65f * highlight), radius,
+              1.0f + highlight);
   dl->AddLine(ImVec2(pos.x + radius, pos.y + 1.0f), ImVec2(pos.x + size.x - radius, pos.y + 1.0f), Col(t.text, 0.07f),
               1.0f);
-  layout(true);
-  return size;
 }

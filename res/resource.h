@@ -1,5 +1,7 @@
 #pragma once
 
+#define IDI_APP 100
+
 // Embedded fonts (RCDATA). Order matches the registry in src/ui/fonts.cpp.
 #define IDR_FONT_GEIST_MEDIUM          101
 #define IDR_FONT_GEIST_BOLD            102

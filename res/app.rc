@@ -2,6 +2,8 @@
 
 1 24 "app.manifest"
 
+IDI_APP ICON "app.ico"
+
 IDR_FONT_GEIST_MEDIUM         RCDATA "Geist-Medium.ttf"
 IDR_FONT_GEIST_BOLD           RCDATA "Geist-Bold.ttf"
 IDR_FONT_GEISTMONO_MEDIUM     RCDATA "GeistMono-Medium.ttf"

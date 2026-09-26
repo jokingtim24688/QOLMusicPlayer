@@ -28,5 +28,8 @@ struct WatermarkStyle {
   float opacity;  // fill opacity
 };
 
+// The shared translucent panel (shadow, fill, border). `highlight` 0..1 tints the border with the accent.
+void Panel(ImDrawList* dl, ImVec2 pos, ImVec2 size, const WatermarkStyle& st, float radius, float highlight);
+
 // Measures (draw=false) or draws the watermark with its top-left corner at `pos`. Returns its size.
 ImVec2 Watermark(ImDrawList* dl, ImVec2 pos, const WatermarkData& d, const WatermarkStyle& s, bool draw);

@@ -9,6 +9,7 @@
 #include <cmath>
 
 #include "app_info.h"
+#include "resource.h"
 #include "providers/clock.h"
 #include "ui/anim.h"
 #include "ui/widgets.h"
@@ -51,6 +52,7 @@ int App::Run(HINSTANCE inst) {
 
   etw_.Start(&fps_, &ping_);
   ping_.Start();
+  media_.Start();
   Tick(true);
 
   while (running_) {
@@ -71,9 +73,12 @@ int App::Run(HINSTANCE inst) {
     }
   }
 
+  media_.Stop();
   ping_.Stop();
   etw_.Stop();
   hotkeys_.UnregisterAll();
+  if (artSrv_) artSrv_->Release();
+  artSrv_ = nullptr;
   TrayRemove();
   ImGui_ImplDX11_Shutdown();
   ImGui_ImplWin32_Shutdown();
@@ -136,7 +141,24 @@ void App::Tick(bool force) {
   d.refreshHz = refreshHz_;
   data_ = std::move(d);
 
-  const std::string sig = data_.Signature();
+  // Music player: position is interpolated between the provider's once-a-second samples.
+  media_.Configure(cfg_.showPlayer && cfg_.overlayVisible, cfg_.playerSpotifyOnly);
+  const MediaState ms = media_.Snapshot();
+  player_.active = ms.active;
+  player_.playing = ms.playing;
+  player_.title = ms.title;
+  player_.artist = ms.artist;
+  player_.duration = static_cast<float>(ms.durationSec);
+  double pos = ms.positionSec + (ms.playing && ms.sampledQpc ? QpcSeconds(QpcNow() - ms.sampledQpc) : 0.0);
+  player_.position = static_cast<float>(std::min(pos, ms.durationSec));
+  if (ms.artVersion != artVersion_) {  // new cover: upload once, reuse every frame
+    artVersion_ = ms.artVersion;
+    if (artSrv_) artSrv_->Release();
+    artSrv_ = ms.art ? renderer_.CreateTexture(ms.art->bgra.data(), ms.art->width, ms.art->height) : nullptr;
+    player_.art = artSrv_ ? reinterpret_cast<ImTextureID>(artSrv_) : ImTextureID_Invalid;
+  }
+
+  const std::string sig = data_.Signature() + player_.Signature();
   if (sig != lastSignature_) {
     lastSignature_ = sig;
     needRedraw_ = true;
@@ -180,14 +202,29 @@ void App::Render() {
   const float wx = right ? static_cast<float>(m.right) - margin - wm.x : static_cast<float>(m.left) + margin;
   const float wy = bottom ? static_cast<float>(m.bottom) - margin - wm.y : static_cast<float>(m.top) + margin;
 
-  // Passive mode: the window hugs the watermark, so DWM only composites a small rectangle over the game.
-  // Width is rounded up to 32 px so small number changes don't resize it every second.
+  // Music player: position is a fraction of the free space inside the margins, so it always stays on screen.
+  const bool playerOn = cfg_.showPlayer && (menuVisible || player_.active || !cfg_.playerHideWhenIdle);
+  const ImVec2 ps = PlayerSize(ws.size);
+  const ImVec2 areaMin(static_cast<float>(m.left) + margin, static_cast<float>(m.top) + margin);
+  const ImVec2 areaMax(static_cast<float>(m.right) - margin, static_cast<float>(m.bottom) - margin);
+  const float freeX = std::max(1.0f, areaMax.x - areaMin.x - ps.x), freeY = std::max(1.0f, areaMax.y - areaMin.y - ps.y);
+  const float px = std::round(areaMin.x + cfg_.playerX * freeX), py = std::round(areaMin.y + cfg_.playerY * freeY);
+
+  // Passive mode: the window hugs the widgets, so DWM only composites that rectangle over the game.
+  // Size is rounded up to 32 px steps (growing away from the watermark's corner) so it doesn't resize every second.
   RECT want = m;
   if (!menuVisible) {
-    const LONG w = (static_cast<LONG>(wm.x + pad * 2) + 31) / 32 * 32;
-    const LONG h = static_cast<LONG>(wm.y + pad * 2);
-    want.left = right ? static_cast<LONG>(wx + wm.x + pad) - w : static_cast<LONG>(wx - pad);
-    want.top = bottom ? static_cast<LONG>(wy + wm.y + pad) - h : static_cast<LONG>(wy - pad);
+    float l = wx, t = wy, r = wx + wm.x, b = wy + wm.y;
+    if (playerOn) {
+      l = std::min(l, px);
+      t = std::min(t, py);
+      r = std::max(r, px + ps.x);
+      b = std::max(b, py + ps.y);
+    }
+    const LONG w = (static_cast<LONG>(r - l + pad * 2) + 31) / 32 * 32;
+    const LONG h = (static_cast<LONG>(b - t + pad * 2) + 31) / 32 * 32;
+    want.left = right ? static_cast<LONG>(std::ceil(r + pad)) - w : static_cast<LONG>(l - pad);
+    want.top = bottom ? static_cast<LONG>(std::ceil(b + pad)) - h : static_cast<LONG>(t - pad);
     want.right = want.left + w;
     want.bottom = want.top + h;
   }
@@ -213,9 +250,23 @@ void App::Render() {
   const ImVec2 origin(static_cast<float>(window_.Rect().left), static_cast<float>(window_.Rect().top));
   if (menuVisible) bg->AddRectFilled(ImVec2(0, 0), io.DisplaySize, Col(theme.crust, 0.45f * menuT_));
   if (cfg_.overlayVisible) Watermark(bg, ImVec2(std::round(wx), std::round(wy)) - origin, data_, ws, true);
+  if (playerOn) {
+    ImVec2 ppos = ImVec2(px, py) - origin;
+    PlayerEvents pev;
+    Player(&ppos, player_, ws, menuOpen_, areaMin - origin, areaMax - origin, &pev);
+    if (pev.moved) {
+      cfg_.playerX = std::clamp((ppos.x + origin.x - areaMin.x) / freeX, 0.0f, 1.0f);
+      cfg_.playerY = std::clamp((ppos.y + origin.y - areaMin.y) / freeY, 0.0f, 1.0f);
+    }
+    if (pev.released) cfgDirty_ = true;
+    if (pev.command != MediaCommand::None) {
+      media_.Send(pev.command);
+      if (pev.command == MediaCommand::PlayPause) player_.playing = !player_.playing;  // instant feedback
+    }
+  }
 
   if (menuVisible) {
-    MenuContext ctx{&cfg_, &fonts_, &games_, data_.ping, data_.fps, etw_.Status(), capture_, keyError_};
+    MenuContext ctx{&cfg_, &fonts_, &games_, data_.ping, data_.fps, etw_.Status(), capture_, keyError_, &player_};
     MenuEvents ev;
     menu_.Draw(ctx, menuT_, ev);
     if (ev.startCapture != Capture::None) StartCapture(ev.startCapture);
@@ -345,8 +396,9 @@ void App::TrayAdd() {
   nid.uID = 1;
   nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
   nid.uCallbackMessage = kTrayMsg;
-  nid.hIcon = LoadIconW(nullptr, IDI_APPLICATION);
-  wcscpy_s(nid.szTip, APP_NAME_W);
+  nid.hIcon = static_cast<HICON>(LoadImageW(GetModuleHandleW(nullptr), MAKEINTRESOURCEW(IDI_APP), IMAGE_ICON,
+                                             GetSystemMetrics(SM_CXSMICON), GetSystemMetrics(SM_CYSMICON), 0));
+  wcscpy_s(nid.szTip, APP_NAME_W L" " QOL_VERSION_W);
   Shell_NotifyIconW(NIM_ADD, &nid);
 }
 

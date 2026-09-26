@@ -52,6 +52,11 @@ void Config::Load() {
     else if (k == "clock_seconds") clockSeconds = ToBool(v);
     else if (k == "username") username = v;
     else if (k == "pinned_exe") pinnedExe = v;
+    else if (k == "show_player") showPlayer = ToBool(v);
+    else if (k == "player_spotify_only") playerSpotifyOnly = ToBool(v);
+    else if (k == "player_hide_idle") playerHideWhenIdle = ToBool(v);
+    else if (k == "player_x") playerX = std::clamp(static_cast<float>(atof(v.c_str())), 0.0f, 1.0f);
+    else if (k == "player_y") playerY = std::clamp(static_cast<float>(atof(v.c_str())), 0.0f, 1.0f);
     else if (k == "menu_vk") menuKey.vk = static_cast<unsigned>(atoi(v.c_str()));
     else if (k == "menu_mods") menuKey.mods = static_cast<unsigned>(atoi(v.c_str()));
     else if (k == "toggle_vk") toggleKey.vk = static_cast<unsigned>(atoi(v.c_str()));
@@ -81,6 +86,11 @@ void Config::Save() const {
     << "clock_seconds=" << clockSeconds << "\n"
     << "username=" << username << "\n"
     << "pinned_exe=" << pinnedExe << "\n"
+    << "show_player=" << showPlayer << "\n"
+    << "player_spotify_only=" << playerSpotifyOnly << "\n"
+    << "player_hide_idle=" << playerHideWhenIdle << "\n"
+    << "player_x=" << playerX << "\n"
+    << "player_y=" << playerY << "\n"
     << "menu_vk=" << menuKey.vk << "\n"
     << "menu_mods=" << menuKey.mods << "\n"
     << "toggle_vk=" << toggleKey.vk << "\n"

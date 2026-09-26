@@ -96,3 +96,21 @@ void Renderer::BeginFrame() {
 }
 
 void Renderer::EndFrame(bool vsync) { swapChain_->Present(vsync ? 1 : 0, 0); }
+
+ID3D11ShaderResourceView* Renderer::CreateTexture(const void* bgra, int width, int height) {
+  D3D11_TEXTURE2D_DESC desc{};
+  desc.Width = static_cast<UINT>(width);
+  desc.Height = static_cast<UINT>(height);
+  desc.MipLevels = 1;
+  desc.ArraySize = 1;
+  desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
+  desc.SampleDesc.Count = 1;
+  desc.Usage = D3D11_USAGE_IMMUTABLE;
+  desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+  D3D11_SUBRESOURCE_DATA init{bgra, static_cast<UINT>(width * 4), 0};
+  ID3D11Texture2D* tex = nullptr;
+  ID3D11ShaderResourceView* srv = nullptr;
+  if (SUCCEEDED(device_->CreateTexture2D(&desc, &init, &tex))) device_->CreateShaderResourceView(tex, nullptr, &srv);
+  SafeRelease(tex);
+  return srv;
+}

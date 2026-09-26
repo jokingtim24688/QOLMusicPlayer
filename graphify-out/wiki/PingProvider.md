@@ -1,50 +1,51 @@
 # PingProvider
 
-> God node · 36 connections · `src/providers/ping.h`
+> 21 nodes · cohesion 0.10
 
-**Community:** [Community 9](Community_9.md)
+## Key Concepts
 
-## Connections by Relation
+- **PingProvider** (36 connections) — `src/providers/ping.h`
+- **atomic** (1 connections)
+- **condition_variable** (1 connections)
+- **DWORD** (1 connections)
+- **mutex** (1 connections)
+- **thread** (1 connections)
+- **current_** (1 connections) — `src/providers/ping.h`
+- **cv_** (1 connections) — `src/providers/ping.h`
+- **cvMu_** (1 connections) — `src/providers/ping.h`
+- **failures_** (1 connections) — `src/providers/ping.h`
+- **hasCurrent_** (1 connections) — `src/providers/ping.h`
+- **history_** (1 connections) — `src/providers/ping.h`
+- **lastTraffic_** (1 connections) — `src/providers/ping.h`
+- **layouts_** (1 connections) — `src/providers/ping.h`
+- **mu_** (1 connections) — `src/providers/ping.h`
+- **result_** (1 connections) — `src/providers/ping.h`
+- **resultMu_** (1 connections) — `src/providers/ping.h`
+- **running_** (1 connections) — `src/providers/ping.h`
+- **target_** (1 connections) — `src/providers/ping.h`
+- **thread_** (1 connections) — `src/providers/ping.h`
+- **traffic_** (1 connections) — `src/providers/ping.h`
 
-### contains
-- ping.h `EXTRACTED`
-- Endpoint `EXTRACTED`
-- Layout `EXTRACTED`
-- Traffic `EXTRACTED`
+## Relationships
 
-### defines
-- Worker `EXTRACTED`
-- PickEndpoint `EXTRACTED`
-- Echo `EXTRACTED`
-- Start `EXTRACTED`
-- SetTarget `EXTRACTED`
-- OnNetworkSend `EXTRACTED`
-- Sample `EXTRACTED`
-- Stop `EXTRACTED`
-- target_ `EXTRACTED`
-- mu_ `EXTRACTED`
-- lastTraffic_ `EXTRACTED`
-- traffic_ `EXTRACTED`
-- layouts_ `EXTRACTED`
-- thread_ `EXTRACTED`
-- cv_ `EXTRACTED`
-- cvMu_ `EXTRACTED`
-- running_ `EXTRACTED`
-- resultMu_ `EXTRACTED`
-- result_ `EXTRACTED`
-- history_ `EXTRACTED`
-- *…and 3 more `defines` connection(s) not listed (lowest-degree first to go)*
+- [ping.cpp](ping.cpp.md) (5 shared connections)
+- [app.h](app.h.md) (3 shared connections)
+- [PingSample](PingSample.md) (2 shared connections)
+- [Endpoint](Endpoint.md) (2 shared connections)
+- [SetTarget](SetTarget.md) (1 shared connections)
+- [OnNetworkSend](OnNetworkSend.md) (1 shared connections)
+- [Traffic](Traffic.md) (1 shared connections)
+- [Layout](Layout.md) (1 shared connections)
 
-### references
-- PingSample `EXTRACTED`
-- map `EXTRACTED`
-- array `EXTRACTED`
-- condition_variable `EXTRACTED`
-- deque `EXTRACTED`
-- atomic `EXTRACTED`
-- mutex `EXTRACTED`
-- thread `EXTRACTED`
-- DWORD `EXTRACTED`
+## Source Files
+
+- `src/providers/ping.h`
+
+## Audit Trail
+
+- EXTRACTED: 36 (100%)
+- INFERRED: 0 (0%)
+- AMBIGUOUS: 0 (0%)
 
 ---
 

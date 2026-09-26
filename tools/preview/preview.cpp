@@ -17,6 +17,7 @@
 #include "ui/anim.h"
 #include "ui/fonts.h"
 #include "ui/menu.h"
+#include "ui/player.h"
 #include "ui/theme.h"
 #include "ui/watermark.h"
 #include "ui/widgets.h"
@@ -156,6 +157,37 @@ static WatermarkData SampleData(const Config& c) {
   return d;
 }
 
+// Fake album cover: a warm diagonal gradient with a soft circle, as an RGBA ImTextureData the rasterizer can sample.
+static ImTextureData* FakeCover() {
+  auto* tex = new ImTextureData();
+  tex->Create(ImTextureFormat_RGBA32, 64, 64);
+  for (int y = 0; y < 64; ++y)
+    for (int x = 0; x < 64; ++x) {
+      auto* p = static_cast<unsigned char*>(tex->GetPixelsAt(x, y));
+      float t = (x + y) / 126.0f, d = std::hypot(x - 40.0f, y - 24.0f);
+      float glow = std::max(0.0f, 1.0f - d / 22.0f);
+      p[0] = static_cast<unsigned char>(std::min(255.0f, 40 + 200 * t + 60 * glow));
+      p[1] = static_cast<unsigned char>(std::min(255.0f, 30 + 70 * t + 90 * glow));
+      p[2] = static_cast<unsigned char>(std::min(255.0f, 90 - 40 * t + 40 * glow));
+      p[3] = 255;
+    }
+  tex->SetTexID(reinterpret_cast<ImTextureID>(tex));
+  tex->SetStatus(ImTextureStatus_OK);
+  return tex;
+}
+
+static PlayerData SamplePlayer(ImTextureID art) {
+  PlayerData p;
+  p.active = true;
+  p.playing = true;
+  p.title = "Midnight City";
+  p.artist = "M83";
+  p.position = 83;
+  p.duration = 243;
+  p.art = art;
+  return p;
+}
+
 int main(int argc, char** argv) {
   const std::string out = argc > 1 ? argv[1] : ".";
   ImGui::CreateContext();
@@ -165,6 +197,7 @@ int main(int argc, char** argv) {
   Fonts fonts;
   fonts.Load();
 
+  const ImTextureID cover = reinterpret_cast<ImTextureID>(FakeCover());
   GameSelector games;
   games.pid_ = 4242;
   games.exe_ = "cs2.exe";
@@ -184,7 +217,7 @@ int main(int argc, char** argv) {
   // 1. Watermark in several themes over a bright/dark "game" background.
   {
     const char* themes[] = {"Neverlose", "Catppuccin Mocha", "Midnight", "Catppuccin Latte", "Nord", "Gruvbox Dark"};
-    Canvas cv(900, 420);
+    Canvas cv(900, 560);
     for (int f = 0; f < 3; ++f) {
       frame(cv.w, cv.h, [&] {
         float y = 16;
@@ -196,6 +229,14 @@ int main(int argc, char** argv) {
           Watermark(ImGui::GetBackgroundDrawList(), ImVec2(20, y), SampleData(c), ws, true);
           y += 66;
         }
+        // Players: playing with cover, and the idle card.
+        Config c;
+        const FontFace& face = fonts.Find(c.font);
+        WatermarkStyle ws{&FindTheme("Catppuccin Mocha"), face.medium, face.bold, 15.0f, c.opacity};
+        ImVec2 p1(20, y + 4), p2(20 + PlayerSize(15.0f).x + 20, y + 4);
+        PlayerEvents ev;
+        Player(&p1, SamplePlayer(cover), ws, false, ImVec2(0, 0), io.DisplaySize, &ev);
+        Player(&p2, PlayerData{}, ws, false, ImVec2(0, 0), io.DisplaySize, &ev);
       });
     }
     cv.Background();
@@ -204,13 +245,14 @@ int main(int argc, char** argv) {
   }
 
   // 2. Menu, one image per tab.
-  const char* tabNames[] = {"overlay", "game", "theme", "font", "keybinds"};
-  for (int tab = 0; tab < 5; ++tab) {
+  const char* tabNames[] = {"overlay", "music", "game", "theme", "font", "keybinds"};
+  for (int tab = 0; tab < 6; ++tab) {
     Config c;
-    c.theme = tab == 2 ? "Midnight" : "Catppuccin Mocha";
+    c.theme = tab == 3 ? "Midnight" : "Catppuccin Mocha";
     const Theme& theme = FindTheme(c.theme);
     Menu menu;
     menu.SelectTab(tab);
+    const PlayerData player = SamplePlayer(cover);
     Canvas cv(1100, 640);
     for (int f = 0; f < 90; ++f) {
       frame(cv.w, cv.h, [&] {
@@ -223,7 +265,10 @@ int main(int argc, char** argv) {
         Watermark(ImGui::GetBackgroundDrawList(), ImVec2(cv.w - 20 - Watermark(nullptr, {}, SampleData(c), ws, false).x, 14),
                   SampleData(c), ws, true);
         MenuContext ctx{&c, &fonts, &games, SampleData(c).ping, SampleData(c).fps, EtwStatus::Running,
-                        tab == 4 ? Capture::ToggleKey : Capture::None, ""};
+                        tab == 5 ? Capture::ToggleKey : Capture::None, "", &player};
+        ImVec2 ppos(40, cv.h - 40 - PlayerSize(15.0f).y);
+        PlayerEvents pev;
+        Player(&ppos, player, ws, true, ImVec2(0, 0), io.DisplaySize, &pev);
         MenuEvents ev;
         menu.Draw(ctx, 1.0f, ev);
         ImGui::PopFont();

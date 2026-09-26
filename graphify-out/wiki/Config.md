@@ -1,50 +1,62 @@
 # Config
 
-> God node · 32 connections · `src/config/config.h`
+> 45 nodes · cohesion 0.05
 
-**Community:** [Community 3](Community_3.md)
+## Key Concepts
 
-## Connections by Relation
+- **Config** (37 connections) — `src/config/config.h`
+- **config.cpp** (14 connections) — `src/config/config.cpp`
+- **algorithm** (11 connections)
+- **cstdio** (7 connections)
+- **clock.cpp** (4 connections) — `src/providers/clock.cpp`
+- **Load** (3 connections) — `src/config/config.h`
+- **Save** (3 connections) — `src/config/config.h`
+- **ConfigPath()** (3 connections) — `src/config/config.cpp`
+- **ToBool()** (3 connections) — `src/config/config.cpp`
+- **ClockText()** (3 connections) — `src/providers/clock.cpp`
+- **fstream** (2 connections)
+- **clock** (1 connections)
+- **Corner** (1 connections)
+- **cstdlib** (1 connections)
+- **filesystem** (1 connections)
+- **shlobj** (1 connections)
+- **clock24h** (1 connections) — `src/config/config.h`
+- **clockSeconds** (1 connections) — `src/config/config.h`
+- **corner** (1 connections) — `src/config/config.h`
+- **font** (1 connections) — `src/config/config.h`
+- **fontSize** (1 connections) — `src/config/config.h`
+- **kMinOpacity** (1 connections) — `src/config/config.h`
+- **logoText** (1 connections) — `src/config/config.h`
+- **menuKey** (1 connections) — `src/config/config.h`
+- **opacity** (1 connections) — `src/config/config.h`
+- *... and 20 more nodes in this community*
 
-### contains
-- config.h `EXTRACTED`
+## Relationships
 
-### defines
-- Load `EXTRACTED`
-- Save `EXTRACTED`
-- theme `EXTRACTED`
-- font `EXTRACTED`
-- fontSize `EXTRACTED`
-- opacity `EXTRACTED`
-- corner `EXTRACTED`
-- logoText `EXTRACTED`
-- showFps `EXTRACTED`
-- showLow `EXTRACTED`
-- showPing `EXTRACTED`
-- showTime `EXTRACTED`
-- showUser `EXTRACTED`
-- clock24h `EXTRACTED`
-- clockSeconds `EXTRACTED`
-- username `EXTRACTED`
-- pinnedExe `EXTRACTED`
-- menuKey `EXTRACTED`
-- toggleKey `EXTRACTED`
-- overlayVisible `EXTRACTED`
-- *…and 1 more `defines` connection(s) not listed (lowest-degree first to go)*
+- [MenuContext](MenuContext.md) (5 shared connections)
+- [preview.cpp](preview.cpp.md) (5 shared connections)
+- [app.h](app.h.md) (5 shared connections)
+- [app.cpp](app.cpp.md) (2 shared connections)
+- [FpsProvider](FpsProvider.md) (2 shared connections)
+- [player.cpp](player.cpp.md) (2 shared connections)
+- [WatermarkData](WatermarkData.md) (2 shared connections)
+- [Renderer](Renderer.md) (1 shared connections)
+- [MediaProvider](MediaProvider.md) (1 shared connections)
+- [ping.cpp](ping.cpp.md) (1 shared connections)
+- [App](App.md) (1 shared connections)
+- [Hotkeys](Hotkeys.md) (1 shared connections)
 
-### imports
-- preview.cpp `EXTRACTED`
-- config.cpp `EXTRACTED`
-- menu.h `EXTRACTED`
-- hotkeys.h `EXTRACTED`
+## Source Files
 
-### references
-- [App](App.md) `EXTRACTED`
-- [MenuContext](MenuContext.md) `EXTRACTED`
-- Hotkey `EXTRACTED`
-- SampleData() `EXTRACTED`
-- string `EXTRACTED`
-- Corner `EXTRACTED`
+- `src/config/config.cpp`
+- `src/config/config.h`
+- `src/providers/clock.cpp`
+
+## Audit Trail
+
+- EXTRACTED: 75 (99%)
+- INFERRED: 1 (1%)
+- AMBIGUOUS: 0 (0%)
 
 ---
 

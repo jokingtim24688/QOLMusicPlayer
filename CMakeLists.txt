@@ -43,15 +43,19 @@ add_executable(QOLOverlay WIN32
   src/providers/ping.cpp
   src/providers/game_select.cpp
   src/providers/clock.cpp
+  src/providers/media.cpp
   src/ui/theme.cpp
   src/ui/fonts.cpp
   src/ui/anim.cpp
   src/ui/widgets.cpp
   src/ui/watermark.cpp
   src/ui/menu.cpp
+  src/ui/player.cpp
   src/config/config.cpp
   res/app.rc)
 target_include_directories(QOLOverlay PRIVATE src res assets/fonts)
+set(QOL_VERSION "0.2.0" CACHE STRING "Version shown in the installer and app")
+target_compile_definitions(QOLOverlay PRIVATE QOL_VERSION="${QOL_VERSION}")
 target_link_libraries(QOLOverlay PRIVATE imgui
   d3d11 d3dcompiler dxgi dcomp dwmapi tdh iphlpapi ws2_32 advapi32 shell32 user32 gdi32 imm32 ole32)
 
@@ -60,6 +64,8 @@ if(MSVC)
   target_compile_options(imgui PRIVATE /utf-8)
   # The manifest comes from res/app.rc (admin + per-monitor DPI), so don't generate a second one.
   target_link_options(QOLOverlay PRIVATE /MANIFEST:NO)
+  # C++/WinRT (Spotify/media controls) and WIC (cover art decoding)
+  target_link_libraries(QOLOverlay PRIVATE windowsapp windowscodecs shcore)
   set_property(TARGET QOLOverlay imgui PROPERTY INTERPROCEDURAL_OPTIMIZATION_RELEASE ON)
 else()
   target_compile_options(QOLOverlay PRIVATE -Wall -Wextra -Werror -Wno-missing-field-initializers)

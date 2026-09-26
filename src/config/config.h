@@ -27,6 +27,12 @@ struct Config {
   bool clockSeconds = false;
   std::string username;  // empty = Windows account name
 
+  // Music player (Spotify via Windows media controls)
+  bool showPlayer = true;
+  bool playerSpotifyOnly = true;  // false = any app that reports media (browser, YouTube Music, ...)
+  bool playerHideWhenIdle = true;  // hide when Spotify (or the media app) isn't open
+  float playerX = 0.0f, playerY = 1.0f;  // position as a fraction of the free space on the monitor
+
   // Game selection: empty = automatic (foreground window)
   std::string pinnedExe;
 

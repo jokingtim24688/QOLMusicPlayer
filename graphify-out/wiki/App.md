@@ -1,54 +1,60 @@
 # App
 
-> God node · 63 connections · `src/app.h`
+> 45 nodes · cohesion 0.04
 
-**Community:** [Community 5](Community_5.md)
+## Key Concepts
 
-## Connections by Relation
+- **App** (73 connections) — `src/app.h`
+- **animating_** (1 connections) — `src/app.h`
+- **appliedTheme_** (1 connections) — `src/app.h`
+- **artSrv_** (1 connections) — `src/app.h`
+- **artVersion_** (1 connections) — `src/app.h`
+- **capture_** (1 connections) — `src/app.h`
+- **cfg_** (1 connections) — `src/app.h`
+- **cfgDirty_** (1 connections) — `src/app.h`
+- **data_** (1 connections) — `src/app.h`
+- **etw_** (1 connections) — `src/app.h`
+- **fonts_** (1 connections) — `src/app.h`
+- **fps_** (1 connections) — `src/app.h`
+- **framesPending_** (1 connections) — `src/app.h`
+- **games_** (1 connections) — `src/app.h`
+- **hotkeys_** (1 connections) — `src/app.h`
+- **keyError_** (1 connections) — `src/app.h`
+- **lastSecond_** (1 connections) — `src/app.h`
+- **lastSignature_** (1 connections) — `src/app.h`
+- **media_** (1 connections) — `src/app.h`
+- **menu_** (1 connections) — `src/app.h`
+- **menuOpen_** (1 connections) — `src/app.h`
+- **menuT_** (1 connections) — `src/app.h`
+- **needRedraw_** (1 connections) — `src/app.h`
+- **ping_** (1 connections) — `src/app.h`
+- **player_** (1 connections) — `src/app.h`
+- *... and 20 more nodes in this community*
 
-### contains
-- app.h `EXTRACTED`
+## Relationships
 
-### defines
-- HandleMessage `EXTRACTED`
-- Run `EXTRACTED`
-- Render `EXTRACTED`
-- FinishCapture `EXTRACTED`
-- TrayMenu `EXTRACTED`
-- CloseMenu `EXTRACTED`
-- Tick `EXTRACTED`
-- ToggleOverlay `EXTRACTED`
-- RegisterHotkeys `EXTRACTED`
-- SaveIfDirty `EXTRACTED`
-- MsUntilNextTick `EXTRACTED`
-- OpenMenu `EXTRACTED`
-- StartCapture `EXTRACTED`
-- TrayAdd `EXTRACTED`
-- TrayRemove `EXTRACTED`
-- WndProc `EXTRACTED`
-- cfg_ `EXTRACTED`
-- window_ `EXTRACTED`
-- renderer_ `EXTRACTED`
-- hotkeys_ `EXTRACTED`
-- *…and 26 more `defines` connection(s) not listed (lowest-degree first to go)*
+- [app.cpp](app.cpp.md) (12 shared connections)
+- [HotkeyName](HotkeyName.md) (2 shared connections)
+- [app.h](app.h.md) (2 shared connections)
+- [HandleMessage](HandleMessage.md) (1 shared connections)
+- [Config](Config.md) (1 shared connections)
+- [OverlayWindow](OverlayWindow.md) (1 shared connections)
+- [Renderer](Renderer.md) (1 shared connections)
+- [Hotkeys](Hotkeys.md) (1 shared connections)
+- [EtwSession](EtwSession.md) (1 shared connections)
+- [MediaProvider](MediaProvider.md) (1 shared connections)
+- [GameSelector](GameSelector.md) (1 shared connections)
+- [preview.cpp](preview.cpp.md) (1 shared connections)
 
-### references
-- [Config](Config.md) `EXTRACTED`
-- [Renderer](Renderer.md) `EXTRACTED`
-- [WatermarkData](WatermarkData.md) `EXTRACTED`
-- [EtwSession](EtwSession.md) `EXTRACTED`
-- [GameSelector](GameSelector.md) `EXTRACTED`
-- OverlayWindow `EXTRACTED`
-- string `EXTRACTED`
-- Menu `EXTRACTED`
-- Hotkeys `EXTRACTED`
-- Fonts `EXTRACTED`
-- ThemeAnimator `EXTRACTED`
-- FpsProvider `EXTRACTED`
-- [PingProvider](PingProvider.md) `EXTRACTED`
-- HWND `EXTRACTED`
-- Capture `EXTRACTED`
-- UINT `EXTRACTED`
+## Source Files
+
+- `src/app.h`
+
+## Audit Trail
+
+- EXTRACTED: 73 (100%)
+- INFERRED: 0 (0%)
+- AMBIGUOUS: 0 (0%)
 
 ---
 

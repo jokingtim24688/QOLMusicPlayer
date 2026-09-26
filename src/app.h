@@ -10,9 +10,11 @@
 #include "providers/etw_session.h"
 #include "providers/fps.h"
 #include "providers/game_select.h"
+#include "providers/media.h"
 #include "providers/ping.h"
 #include "ui/fonts.h"
 #include "ui/menu.h"
+#include "ui/player.h"
 #include "ui/theme.h"
 #include "ui/watermark.h"
 
@@ -47,12 +49,16 @@ class App {
   FpsProvider fps_;
   PingProvider ping_;
   EtwSession etw_;
+  MediaProvider media_;
   GameSelector games_;
   Fonts fonts_;
   ThemeAnimator theme_;
   Menu menu_;
 
   WatermarkData data_;
+  PlayerData player_;
+  unsigned artVersion_ = 0;
+  ID3D11ShaderResourceView* artSrv_ = nullptr;
   std::string lastSignature_;
   std::string windowsUser_;
   std::string appliedTheme_;

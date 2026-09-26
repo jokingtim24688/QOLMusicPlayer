@@ -16,6 +16,7 @@ add_executable(preview
   ${ROOT}/src/ui/widgets.cpp
   ${ROOT}/src/ui/watermark.cpp
   ${ROOT}/src/ui/menu.cpp
+  ${ROOT}/src/ui/player.cpp
   ${imgui_SOURCE_DIR}/imgui.cpp
   ${imgui_SOURCE_DIR}/imgui_draw.cpp
   ${imgui_SOURCE_DIR}/imgui_tables.cpp

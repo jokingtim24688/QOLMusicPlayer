@@ -30,7 +30,19 @@
 - CI: .github/workflows/build.yml builds with MSVC on windows-latest and uploads QOLOverlay.exe.
 - Name: placeholder "QOL Overlay" (APP_NAME_W in src/app_info.h). The user was asked to pick a name.
 
+## 2026-09-26 — v0.2.0: Spotify player + installer
+- Music player card: cover art (WIC decode → D3D11 texture), title/artist with ellipsis, progress, prev/play/next.
+  Reads System Media Transport Controls via C++/WinRT on a background MTA thread polling once a second. Prefers
+  Spotify's session; the "Spotify only" toggle can widen it to any media app.
+- Draggable while the menu is open (position saved as a fraction of free screen space). Buttons only work with
+  the menu open; the overlay stays click-through otherwise. The passive window now covers the union of the
+  watermark and player.
+- New Music tab. App icon (res/app.ico) used by the exe, tray, installer and shortcuts.
+- Inno Setup installer (installer/QOLOverlay.iss): Program Files, desktop + Start menu shortcuts, launches when
+  done, closes a running copy first. CI builds it; `v*` tags publish QOLOverlay-Setup.exe as a GitHub Release.
+- mingw builds stub the media provider (no C++/WinRT there); the real code is compiled by MSVC in CI.
+
 ## Next
 - User tests on Windows (CS2 borderless): FPS vs cl_showfps, ping vs scoreboard, CPU use at idle.
 - Pick the final name.
-- Later: more themes/fonts, Vulkan/OpenGL FPS (DxgKrnl events), frametime graph, now-playing widget.
+- Later: more themes/fonts, Vulkan/OpenGL FPS (DxgKrnl events), frametime graph, draggable watermark.

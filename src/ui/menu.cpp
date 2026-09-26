@@ -16,8 +16,8 @@ using ui::T;
 
 namespace {
 
-const char* const kTabs[] = {"Overlay", "Game", "Theme", "Font", "Keybinds"};
-constexpr int kTabCount = 5;
+const char* const kTabs[] = {"Overlay", "Music", "Game", "Theme", "Font", "Keybinds"};
+constexpr int kTabCount = 6;
 
 // Scales every vertex added to `dl` since `start` around `center`. ImGui has no transforms, so the
 // open/close zoom is applied to the finished geometry.
@@ -131,10 +131,11 @@ void Menu::Draw(MenuContext& ctx, float openT, MenuEvents& ev) {
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(S(8), S(4)));
   switch (tab_) {
     case 0: TabOverlay(ctx, ev); break;
-    case 1: TabGame(ctx, ev); break;
-    case 2: TabTheme(ctx, ev); break;
-    case 3: TabFont(ctx, ev); break;
-    case 4: TabKeybinds(ctx, ev); break;
+    case 1: TabMusic(ctx, ev); break;
+    case 2: TabGame(ctx, ev); break;
+    case 3: TabTheme(ctx, ev); break;
+    case 4: TabFont(ctx, ev); break;
+    case 5: TabKeybinds(ctx, ev); break;
     default: break;
   }
   Gap(12);
@@ -197,6 +198,44 @@ void Menu::TabOverlay(MenuContext& ctx, MenuEvents& ev) {
   ev.changed |= ui::TextField("Logo text", &c.logoText, "QOL");
   Gap(6);
   ev.changed |= ui::TextField("Display name", &c.username, "Windows account name");
+}
+
+void Menu::TabMusic(MenuContext& ctx, MenuEvents& ev) {
+  Config& c = *ctx.cfg;
+  const PlayerData& p = *ctx.player;
+  ui::Heading("Music");
+  if (!c.showPlayer) ui::Note("The player is off.");
+  else if (p.active) {
+    std::string now = (p.playing ? "Playing " : "Paused on ") + (p.title.empty() ? std::string("a track") : p.title);
+    if (!p.artist.empty()) now += " by " + p.artist;
+    ui::Note(now.c_str(), T().text);
+  } else {
+    ui::Note(c.playerSpotifyOnly ? "Spotify isn't open, or hasn't played anything yet."
+                                 : "No app is reporting music right now.");
+  }
+  Gap(8);
+  ev.changed |= ui::Toggle("Show music player", &c.showPlayer);
+  if (c.showPlayer) {
+    ev.changed |= ui::Toggle("Spotify only", &c.playerSpotifyOnly);
+    ev.changed |= ui::Toggle("Hide when nothing is open", &c.playerHideWhenIdle);
+    Gap(6);
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
+    ui::Note("Drag the player to move it while this menu is open. Its buttons work here too; outside the menu the "
+             "overlay stays click-through so it never steals a click from your game.");
+    Gap(8);
+    ImVec2 a, b;
+    if (ui::SelectRow("##reset-player", false, S(40), &a, &b)) {
+      c.playerX = 0.0f;
+      c.playerY = 1.0f;
+      ev.changed = true;
+    }
+    ImGui::GetWindowDrawList()->AddRect(a, b, Col(T().overlay, 0.5f), S(8));
+    ImGui::GetWindowDrawList()->AddText(a + ImVec2(S(18), (S(40) - ImGui::GetTextLineHeight()) * 0.5f),
+                                        Col(T().text), "Reset position (bottom left)");
+  }
+  Gap(10);
+  ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
+  ui::Note("Reads Windows' media controls (the same info as the volume flyout). No Spotify login needed.");
 }
 
 void Menu::TabGame(MenuContext& ctx, MenuEvents& ev) {

@@ -10,6 +10,11 @@
   - Recommended stack: C++20 + D3D11 + DirectComposition + Dear ImGui.
 - graphify wiki not built yet: the repo has no code, and indexing the docs needs an LLM API key that this container doesn't have. It will be built once M0 code exists (code indexing needs no key).
 
+## 2026-09-26 — Anti-vibe design pass (still no code)
+- Added docs/PLAN.md §2.5: design rules applied up front. Covers banned tells, how to fake glass
+  honestly in ImGui (optional real DWM acrylic, off by default), one motion moment, tabular
+  figures, FPS colors tied to refresh rate, and actionable error states.
+
 ## Next
 - User answers the open questions in docs/PLAN.md §4.
 - Then start M0 (skeleton overlay window).

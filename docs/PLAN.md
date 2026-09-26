@@ -98,6 +98,52 @@ overlay.exe
 
 ---
 
+## 2.5 Visual design rules (anti-vibe pass)
+
+Applied before any UI code exists, so the overlay doesn't end up looking like a generic ImGui demo
+or a generic AI-generated overlay.
+
+**Tells we will not ship**
+- Purple/violet or indigo-to-pink accents. Each theme preset gets its accent from the real cheat it
+  imitates: Neverlose's cool blue/cyan, and the Orbit and Krypton colors taken from their menus.
+- ImGui's default font (ProggyClean) or a default sans. Use one bundled typeface with **tabular
+  figures**, so "219 FPS" doesn't jitter width every frame. A narrow grotesk for labels is fine;
+  numbers are the priority.
+- Every widget with the same rounding and shadow. The watermark is a single pill. Indicator panels
+  are squarer and sit lower. The settings menu is the only surface with real elevation.
+- Text separators (`|`, `·`) between segments. Use an icon plus value per segment with thin
+  hairline dividers, as in the Neverlose screenshot.
+- Decorative gradients. The only gradient allowed is the 1–2 px accent line/glow that Neverlose
+  uses to mark the active widget.
+
+**Glass, done honestly**
+- ImGui can't blur what's behind a window. Real blur would need DWM acrylic
+  (`DWMWA_SYSTEMBACKDROP_TYPE`, Windows 11 only), and it would force the game to be composited, which
+  adds latency. So:
+  - **Default:** "fake glass". A translucent dark fill (~70–80% opacity), a 1 px light top-edge
+    highlight, a soft shadow, and a very faint noise texture. It's readable over any game scene.
+  - **Optional (off by default, Win11 only):** real acrylic behind the watermark only, with a warning
+    about latency.
+- Contrast check against the worst case: bright CS2 skyboxes (Dust2 at midday) and flashbangs.
+  Text must stay readable at full white behind it. Fill opacity has a floor the user can't go below.
+
+**Depth and motion (one moment, not many)**
+- Z-levels: indicator panels (flat) → watermark (lifted) → settings menu (highest, with dimmed backdrop).
+- The one motion moment: when the settings menu opens, the watermark segments slide into their new
+  positions with spring easing. Everything else changes instantly; no fading every number.
+- Values never animate. An overlay that tweens its FPS number is lying about the FPS.
+
+**Domain-specific behaviour instead of placeholders**
+- FPS segment color follows thresholds tied to the monitor refresh rate (e.g. at 240 Hz, amber
+  below 240 and red below 144), not fixed generic colors.
+- 1% low sits next to the average FPS, because stutter matters more than the average.
+- A frametime sparkline in the indicator module shows a stutter as a visible spike.
+- Empty and error states say what to do. For example, "FPS needs admin or the Performance Log
+  Users group — open settings to fix", not "N/A".
+- Demo mode for screenshots uses realistic numbers (CS2 on a 4.8 GHz 8-core at 240 Hz), not zeros.
+
+---
+
 ## 3. Milestones
 
 1. **M0 – Skeleton**: CMake project, transparent click-through topmost window, ImGui renders a static bar.

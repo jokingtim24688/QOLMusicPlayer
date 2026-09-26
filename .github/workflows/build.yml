@@ -19,7 +19,9 @@ jobs:
       - name: Version
         shell: pwsh
         run: |
-          $v = if ($env:GITHUB_REF_TYPE -eq 'tag') { $env:GITHUB_REF_NAME.TrimStart('v') } else { '0.2.0' }
+          # Version lives in CMakeLists.txt (QOL_VERSION); a v* tag overrides it.
+          $v = (Select-String -Path CMakeLists.txt -Pattern 'set\(QOL_VERSION "([^"]+)"').Matches[0].Groups[1].Value
+          if ($env:GITHUB_REF_TYPE -eq 'tag') { $v = $env:GITHUB_REF_NAME.TrimStart('v') }
           "QOL_VERSION=$v" | Out-File -FilePath $env:GITHUB_ENV -Append
 
       - name: Configure
@@ -43,9 +45,23 @@ jobs:
             build/Release/QOLOverlay.exe
             installer/Output/QOLOverlay-Setup.exe
 
+      # Publishes (or refreshes) release v<version> with the installer, so the one-line install command
+      # (releases/latest/download/QOLOverlay-Setup.exe) always gets the newest build of the release branch.
       - name: Publish release
-        if: startsWith(github.ref, 'refs/tags/v')
+        if: >-
+          github.event_name == 'push' && (startsWith(github.ref, 'refs/tags/v') ||
+          github.ref_name == github.event.repository.default_branch ||
+          github.ref_name == 'claude/vibrant-heisenberg-5xg2ip')
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ env.QOL_VERSION }}
+          target_commitish: ${{ github.sha }}
+          name: QOL Overlay ${{ env.QOL_VERSION }}
+          body: |
+            Install or update by pasting this into PowerShell:
+            ```powershell
+            $f="$env:TEMP\QOLOverlay-Setup.exe"; irm https://github.com/${{ github.repository }}/releases/latest/download/QOLOverlay-Setup.exe -OutFile $f; Start-Process $f
+            ```
           files: installer/Output/QOLOverlay-Setup.exe
+          overwrite_files: true
           make_latest: true

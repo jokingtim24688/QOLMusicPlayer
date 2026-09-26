@@ -41,6 +41,9 @@
 - Inno Setup installer (installer/QOLOverlay.iss): Program Files, desktop + Start menu shortcuts, launches when
   done, closes a running copy first. CI builds it; `v*` tags publish QOLOverlay-Setup.exe as a GitHub Release.
 - mingw builds stub the media provider (no C++/WinRT there); the real code is compiled by MSVC in CI.
+- Release v0.2.0 is published with QOLOverlay-Setup.exe (3.0 MB). Tag pushes are blocked from this
+  environment, so CI creates the release from pushes to the release branch (version from CMakeLists.txt).
+  Install command: see README "Install".
 
 ## Next
 - User tests on Windows (CS2 borderless): FPS vs cl_showfps, ping vs scoreboard, CPU use at idle.

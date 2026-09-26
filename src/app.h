@@ -72,4 +72,6 @@ class App {
   int tickCount_ = 0;
   int lastSecond_ = -1;
   UINT taskbarCreatedMsg_ = 0;
+  HMONITOR refreshMonitor_ = nullptr;
+  float refreshHz_ = 60.0f;
 };

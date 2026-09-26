@@ -122,13 +122,18 @@ void App::Tick(bool force) {
   d.time = ClockText(cfg_.clock24h, cfg_.clockSeconds);
   d.user = cfg_.username.empty() ? windowsUser_ : cfg_.username;
 
+  // Refresh rate only changes with the monitor (or a mode switch), so it's looked up once per monitor.
   HMONITOR mon = games_.Monitor() ? games_.Monitor() : MonitorFromPoint(POINT{0, 0}, MONITOR_DEFAULTTOPRIMARY);
-  MONITORINFOEXW mi{};
-  mi.cbSize = sizeof(mi);
-  DEVMODEW dm{};
-  dm.dmSize = sizeof(dm);
-  if (GetMonitorInfoW(mon, &mi) && EnumDisplaySettingsW(mi.szDevice, ENUM_CURRENT_SETTINGS, &dm))
-    d.refreshHz = static_cast<float>(dm.dmDisplayFrequency);
+  if (mon != refreshMonitor_) {
+    refreshMonitor_ = mon;
+    MONITORINFOEXW mi{};
+    mi.cbSize = sizeof(mi);
+    DEVMODEW dm{};
+    dm.dmSize = sizeof(dm);
+    if (GetMonitorInfoW(mon, &mi) && EnumDisplaySettingsW(mi.szDevice, ENUM_CURRENT_SETTINGS, &dm))
+      refreshHz_ = static_cast<float>(dm.dmDisplayFrequency);
+  }
+  d.refreshHz = refreshHz_;
   data_ = std::move(d);
 
   const std::string sig = data_.Signature();
@@ -416,6 +421,7 @@ LRESULT App::HandleMessage(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
       return 0;
     case WM_DISPLAYCHANGE:
     case WM_DPICHANGED:
+      refreshMonitor_ = nullptr;  // resolution or refresh rate may have changed
       needRedraw_ = true;
       return 0;
     case WM_CLOSE:

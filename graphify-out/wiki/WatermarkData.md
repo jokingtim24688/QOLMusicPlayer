@@ -1,59 +1,58 @@
 # WatermarkData
 
-> 43 nodes · cohesion 0.07
+> 32 nodes · cohesion 0.07
 
 ## Key Concepts
 
-- **WatermarkData** (21 connections) — `src/ui/watermark.h`
-- **watermark.cpp** (13 connections) — `src/ui/watermark.cpp`
-- **WatermarkStyle** (12 connections) — `src/ui/watermark.h`
-- **Watermark()** (11 connections) — `src/ui/watermark.cpp`
-- **Pen** (10 connections) — `src/ui/watermark.cpp`
-- **Panel()** (8 connections) — `src/ui/watermark.cpp`
-- **ImDrawList** (7 connections)
-- **ImVec2** (6 connections)
-- **ImU32** (5 connections)
-- **.Text()** (5 connections) — `src/ui/watermark.cpp`
-- **IconBars()** (4 connections) — `src/ui/watermark.cpp`
-- **IconClock()** (4 connections) — `src/ui/watermark.cpp`
-- **IconSignal()** (4 connections) — `src/ui/watermark.cpp`
-- **IconUser()** (4 connections) — `src/ui/watermark.cpp`
-- **.DigitCell()** (3 connections) — `src/ui/watermark.cpp`
-- **Signature** (3 connections) — `src/ui/watermark.h`
-- **ImFont** (2 connections)
-- **.Space()** (2 connections) — `src/ui/watermark.cpp`
+- **WatermarkData** (26 connections) — `src/ui/watermark.h`
+- **HasSeg()** (7 connections) — `src/config/segments.h`
+- **SegInfo** (6 connections) — `src/config/segments.h`
+- **SegmentsFromString()** (6 connections) — `src/config/segments.h`
+- **SegmentsToString()** (6 connections) — `src/config/segments.h`
+- **Seg** (4 connections)
+- **Signature** (4 connections) — `src/ui/watermark.h`
+- **vector** (3 connections)
+- **string** (2 connections)
+- **desc** (1 connections) — `src/config/segments.h`
+- **id** (1 connections) — `src/config/segments.h`
+- **key** (1 connections) — `src/config/segments.h`
+- **name** (1 connections) — `src/config/segments.h`
 - **string** (1 connections)
-- **ImFont** (1 connections)
+- **Seg** (1 connections)
 - **string** (1 connections)
-- **dl** (1 connections) — `src/ui/watermark.cpp`
-- **draw** (1 connections) — `src/ui/watermark.cpp`
-- **h** (1 connections) — `src/ui/watermark.cpp`
-- **x** (1 connections) — `src/ui/watermark.cpp`
-- *... and 18 more nodes in this community*
+- **vector** (1 connections)
+- **cpu** (1 connections) — `src/ui/watermark.h`
+- **date** (1 connections) — `src/ui/watermark.h`
+- **fps** (1 connections) — `src/ui/watermark.h`
+- **fpsProblem** (1 connections) — `src/ui/watermark.h`
+- **game** (1 connections) — `src/ui/watermark.h`
+- **gpu** (1 connections) — `src/ui/watermark.h`
+- **logo** (1 connections) — `src/ui/watermark.h`
+- **ping** (1 connections) — `src/ui/watermark.h`
+- *... and 7 more nodes in this community*
 
 ## Relationships
 
-- [app.h](app.h.md) (3 shared connections)
-- [player.cpp](player.cpp.md) (3 shared connections)
-- [MenuContext](MenuContext.md) (3 shared connections)
-- [preview.cpp](preview.cpp.md) (3 shared connections)
+- [app.h](app.h.md) (5 shared connections)
+- [MenuContext](MenuContext.md) (2 shared connections)
 - [Config](Config.md) (2 shared connections)
-- [Theme](Theme.md) (2 shared connections)
-- [anim.cpp](anim.cpp.md) (1 shared connections)
-- [app.cpp](app.cpp.md) (1 shared connections)
+- [watermark.cpp](watermark.cpp.md) (2 shared connections)
+- [Tick](Tick.md) (1 shared connections)
 - [App](App.md) (1 shared connections)
 - [FpsProvider](FpsProvider.md) (1 shared connections)
 - [PingSample](PingSample.md) (1 shared connections)
+- [preview.cpp](preview.cpp.md) (1 shared connections)
+- [LoadFile](LoadFile.md) (1 shared connections)
 
 ## Source Files
 
-- `src/ui/watermark.cpp`
+- `src/config/segments.h`
 - `src/ui/watermark.h`
 
 ## Audit Trail
 
-- EXTRACTED: 78 (92%)
-- INFERRED: 7 (8%)
+- EXTRACTED: 45 (87%)
+- INFERRED: 7 (13%)
 - AMBIGUOUS: 0 (0%)
 
 ---

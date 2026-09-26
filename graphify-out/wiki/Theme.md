@@ -1,6 +1,6 @@
 # Theme
 
-> 35 nodes · cohesion 0.07
+> 34 nodes · cohesion 0.07
 
 ## Key Concepts
 
@@ -11,7 +11,6 @@
 - **cstring** (6 connections)
 - **ApplyImGuiStyle()** (4 connections) — `src/ui/theme.cpp`
 - **Lerp()** (4 connections) — `src/ui/theme.cpp`
-- **cstdint** (3 connections)
 - **Set** (3 connections) — `src/ui/theme.h`
 - **Update** (3 connections) — `src/ui/theme.h`
 - **Hex()** (2 connections) — `src/ui/theme.cpp`
@@ -29,17 +28,19 @@
 - **surface1** (1 connections) — `src/ui/theme.h`
 - **text** (1 connections) — `src/ui/theme.h`
 - **warn** (1 connections) — `src/ui/theme.h`
-- *... and 10 more nodes in this community*
+- **current_** (1 connections) — `src/ui/theme.h`
+- *... and 9 more nodes in this community*
 
 ## Relationships
 
-- [app.h](app.h.md) (7 shared connections)
+- [app.h](app.h.md) (6 shared connections)
 - [MenuContext](MenuContext.md) (5 shared connections)
-- [WatermarkData](WatermarkData.md) (2 shared connections)
 - [preview.cpp](preview.cpp.md) (2 shared connections)
 - [EtwSession](EtwSession.md) (1 shared connections)
 - [ping.cpp](ping.cpp.md) (1 shared connections)
+- [watermark.cpp](watermark.cpp.md) (1 shared connections)
 - [app.cpp](app.cpp.md) (1 shared connections)
+- [player.cpp](player.cpp.md) (1 shared connections)
 - [App](App.md) (1 shared connections)
 
 ## Source Files
@@ -50,7 +51,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 57 (95%)
+- EXTRACTED: 55 (95%)
 - INFERRED: 3 (5%)
 - AMBIGUOUS: 0 (0%)
 

@@ -6,11 +6,11 @@
 #include <cstring>
 
 std::string WatermarkData::Signature() const {
-  char buf[256];
-  snprintf(buf, sizeof(buf), "%d%d%d%d%d|%d|%.0f|%.0f|%s|%d|%d|%s|%s|%s|%s", showFps, showLow, showPing, showTime,
-           showUser, fps.valid, fps.fps, fps.low1, fpsProblem.c_str(), static_cast<int>(ping.state), ping.ms,
-           time.c_str(), user.c_str(), logo.c_str(), ping.endpoint.c_str());
-  return buf;
+  char buf[160];
+  snprintf(buf, sizeof(buf), "%s|%d|%d|%.0f|%.0f|%d|%d|%.0f|%.0f|%.0f|", SegmentsToString(segments).c_str(), showLow,
+           fps.valid, fps.fps, fps.low1, static_cast<int>(ping.state), ping.ms, cpu, gpu, ram);
+  return buf + fpsProblem + '|' + time + '|' + date + '|' + user + '|' + game + '|' + session + '|' + logo + '|' +
+         ping.endpoint;
 }
 
 namespace {
@@ -91,7 +91,87 @@ void IconUser(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {
   dl->PathFillConvex(col);
 }
 
+void IconCalendar(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {
+  const float t = s * 0.12f;
+  const ImVec2 a(c.x - s * 0.44f, c.y - s * 0.34f), b(c.x + s * 0.44f, c.y + s * 0.44f);
+  dl->AddRect(a, b, col, s * 0.12f, t);
+  dl->AddRectFilled(a, ImVec2(b.x, a.y + s * 0.24f), col, s * 0.12f, ImDrawFlags_RoundCornersTop);
+  dl->AddLine(ImVec2(c.x - s * 0.22f, c.y - s * 0.5f), ImVec2(c.x - s * 0.22f, c.y - s * 0.26f), col, t);
+  dl->AddLine(ImVec2(c.x + s * 0.22f, c.y - s * 0.5f), ImVec2(c.x + s * 0.22f, c.y - s * 0.26f), col, t);
+  dl->AddRectFilled(ImVec2(c.x - s * 0.24f, c.y + s * 0.02f), ImVec2(c.x - s * 0.04f, c.y + s * 0.22f), col, 1.0f);
+}
+
+void IconGamepad(ImDrawList* dl, ImVec2 c, float s, ImU32 col, ImU32 cut) {
+  dl->AddRectFilled(ImVec2(c.x - s * 0.5f, c.y - s * 0.3f), ImVec2(c.x + s * 0.5f, c.y + s * 0.34f), col, s * 0.3f);
+  const float t = s * 0.1f;
+  dl->AddRectFilled(ImVec2(c.x - s * 0.32f, c.y - t * 0.5f), ImVec2(c.x - s * 0.12f, c.y + t * 0.5f), cut);
+  dl->AddRectFilled(ImVec2(c.x - s * 0.22f - t * 0.5f, c.y - s * 0.1f), ImVec2(c.x - s * 0.22f + t * 0.5f, c.y + s * 0.1f),
+                    cut);
+  dl->AddCircleFilled(ImVec2(c.x + s * 0.2f, c.y - s * 0.04f), s * 0.07f, cut);
+  dl->AddCircleFilled(ImVec2(c.x + s * 0.32f, c.y + s * 0.08f), s * 0.07f, cut);
+}
+
+void IconStopwatch(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {
+  const ImVec2 o(c.x, c.y + s * 0.06f);
+  const float r = s * 0.4f, t = s * 0.12f;
+  dl->AddCircle(o, r, col, 20, t);
+  dl->AddLine(ImVec2(c.x - s * 0.12f, c.y - s * 0.48f), ImVec2(c.x + s * 0.12f, c.y - s * 0.48f), col, t);
+  dl->AddLine(o, ImVec2(o.x + r * 0.45f, o.y - r * 0.45f), col, t);
+}
+
+void IconPulse(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {  // frame time
+  const ImVec2 pts[] = {{c.x - s * 0.5f, c.y + s * 0.05f}, {c.x - s * 0.22f, c.y + s * 0.05f},
+                        {c.x - s * 0.08f, c.y - s * 0.4f}, {c.x + s * 0.1f, c.y + s * 0.4f},
+                        {c.x + s * 0.24f, c.y + s * 0.05f}, {c.x + s * 0.5f, c.y + s * 0.05f}};
+  dl->AddPolyline(pts, 6, col, s * 0.12f);
+}
+
+void IconChip(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {  // CPU
+  const float t = s * 0.1f, h = s * 0.3f;
+  dl->AddRect(ImVec2(c.x - h, c.y - h), ImVec2(c.x + h, c.y + h), col, s * 0.08f, t);
+  dl->AddRectFilled(ImVec2(c.x - h * 0.4f, c.y - h * 0.4f), ImVec2(c.x + h * 0.4f, c.y + h * 0.4f), col, 1.0f);
+  for (float k : {-0.5f, 0.0f, 0.5f}) {
+    dl->AddLine(ImVec2(c.x + h * k, c.y - s * 0.5f), ImVec2(c.x + h * k, c.y - h), col, t);
+    dl->AddLine(ImVec2(c.x + h * k, c.y + h), ImVec2(c.x + h * k, c.y + s * 0.5f), col, t);
+    dl->AddLine(ImVec2(c.x - s * 0.5f, c.y + h * k), ImVec2(c.x - h, c.y + h * k), col, t);
+    dl->AddLine(ImVec2(c.x + h, c.y + h * k), ImVec2(c.x + s * 0.5f, c.y + h * k), col, t);
+  }
+}
+
+void IconGpu(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {  // graphics card with a fan
+  const float t = s * 0.1f;
+  dl->AddRect(ImVec2(c.x - s * 0.5f, c.y - s * 0.3f), ImVec2(c.x + s * 0.5f, c.y + s * 0.26f), col, s * 0.08f, t);
+  dl->AddCircle(ImVec2(c.x + s * 0.12f, c.y - s * 0.02f), s * 0.18f, col, 14, t);
+  dl->AddRectFilled(ImVec2(c.x - s * 0.36f, c.y + s * 0.26f), ImVec2(c.x - s * 0.04f, c.y + s * 0.42f), col);
+}
+
+void IconRam(ImDrawList* dl, ImVec2 c, float s, ImU32 col) {  // memory stick
+  const float t = s * 0.1f;
+  dl->AddRect(ImVec2(c.x - s * 0.5f, c.y - s * 0.24f), ImVec2(c.x + s * 0.5f, c.y + s * 0.2f), col, s * 0.06f, t);
+  for (float k : {-0.28f, 0.0f, 0.28f})
+    dl->AddRectFilled(ImVec2(c.x + s * k - s * 0.08f, c.y - s * 0.1f), ImVec2(c.x + s * k + s * 0.08f, c.y + s * 0.06f),
+                      col);
+  for (float k : {-0.38f, -0.19f, 0.0f, 0.19f, 0.38f})
+    dl->AddLine(ImVec2(c.x + s * k, c.y + s * 0.2f), ImVec2(c.x + s * k, c.y + s * 0.38f), col, t);
+}
+
 }  // namespace
+
+void SegmentIcon(Seg seg, ImDrawList* dl, ImVec2 c, float s, ImU32 col) {
+  switch (seg) {
+    case Seg::Fps: IconBars(dl, c, s, col); break;
+    case Seg::FrameTime: IconPulse(dl, c, s, col); break;
+    case Seg::Ping: IconSignal(dl, c, s, col); break;
+    case Seg::Game: IconGamepad(dl, c, s, col, IM_COL32(0, 0, 0, 170)); break;
+    case Seg::Session: IconStopwatch(dl, c, s, col); break;
+    case Seg::Date: IconCalendar(dl, c, s, col); break;
+    case Seg::Time: IconClock(dl, c, s, col); break;
+    case Seg::Cpu: IconChip(dl, c, s, col); break;
+    case Seg::Gpu: IconGpu(dl, c, s, col); break;
+    case Seg::Ram: IconRam(dl, c, s, col); break;
+    case Seg::User: IconUser(dl, c, s, col); break;
+  }
+}
 
 ImVec2 Watermark(ImDrawList* dl, ImVec2 pos, const WatermarkData& d, const WatermarkStyle& st, bool draw) {
   const Theme& t = *st.theme;
@@ -112,12 +192,6 @@ ImVec2 Watermark(ImDrawList* dl, ImVec2 pos, const WatermarkData& d, const Water
       }
       pen.Space(gap * 2 + 1);
     };
-    auto segmentIcon = [&](void (*fn)(ImDrawList*, ImVec2, float, ImU32)) {
-      if (!first) divider();
-      first = false;
-      if (doDraw) fn(dl, ImVec2(pen.x + icon * 0.5f, pos.y + height * 0.5f), icon, Col(t.accent));
-      pen.Space(icon + fs * 0.45f);
-    };
 
     if (!d.logo.empty()) {
       const float x0 = pen.x;
@@ -130,53 +204,89 @@ ImVec2 Watermark(ImDrawList* dl, ImVec2 pos, const WatermarkData& d, const Water
       first = false;
     }
 
-    if (d.showFps) {
-      segmentIcon(IconBars);
-      if (!d.fps.valid) {
-        pen.Text(st.regular, small, Col(t.subtext), d.fpsProblem.empty() ? "no game" : d.fpsProblem.c_str());
-      } else {
-        const float hz = d.refreshHz > 0 ? d.refreshHz : 60.0f;
-        const ImVec4& c = d.fps.fps >= hz * 0.95f ? t.good : d.fps.fps >= hz * 0.6f ? t.warn : t.bad;
-        char num[16];
-        snprintf(num, sizeof(num), "%d", static_cast<int>(std::lround(d.fps.fps)));
-        pen.Text(st.bold, fs, Col(c), num, true, 3);
-        pen.Space(fs * 0.25f);
-        pen.Text(st.regular, small, Col(t.subtext), "FPS");
-        if (d.showLow) {
-          pen.Space(fs * 0.6f);
-          snprintf(num, sizeof(num), "%d", static_cast<int>(std::lround(d.fps.low1)));
-          pen.Text(st.regular, fs, Col(t.text), num, true, 3);
-          pen.Space(fs * 0.25f);
-          pen.Text(st.regular, small, Col(t.subtext), "1% low");
+    auto percent = [&](float v) {
+      if (v < 0) {
+        pen.Text(st.regular, fs, Col(t.subtext), "--");
+        return;
+      }
+      char num[8];
+      snprintf(num, sizeof(num), "%d", static_cast<int>(std::lround(v)));
+      pen.Text(st.bold, fs, Col(v >= 90.0f ? t.warn : t.text), num, true, 2);
+      pen.Text(st.regular, small, Col(t.subtext), "%");
+    };
+    auto unit = [&](const char* u) {
+      pen.Space(fs * 0.25f);
+      pen.Text(st.regular, small, Col(t.subtext), u);
+    };
+
+    for (Seg seg : d.segments) {
+      if (seg == Seg::User && d.user.empty()) continue;
+      if (!first) divider();
+      first = false;
+      if (doDraw) SegmentIcon(seg, dl, ImVec2(pen.x + icon * 0.5f, pos.y + height * 0.5f), icon, Col(t.accent));
+      pen.Space(icon + fs * 0.45f);
+
+      switch (seg) {
+        case Seg::Fps: {
+          if (!d.fps.valid) {
+            pen.Text(st.regular, small, Col(t.subtext), d.fpsProblem.empty() ? "no game" : d.fpsProblem.c_str());
+            break;
+          }
+          const float hz = d.refreshHz > 0 ? d.refreshHz : 60.0f;
+          const ImVec4& c = d.fps.fps >= hz * 0.95f ? t.good : d.fps.fps >= hz * 0.6f ? t.warn : t.bad;
+          char num[16];
+          snprintf(num, sizeof(num), "%d", static_cast<int>(std::lround(d.fps.fps)));
+          pen.Text(st.bold, fs, Col(c), num, true, 3);
+          unit("FPS");
+          if (d.showLow) {
+            pen.Space(fs * 0.6f);
+            snprintf(num, sizeof(num), "%d", static_cast<int>(std::lround(d.fps.low1)));
+            pen.Text(st.regular, fs, Col(t.text), num, true, 3);
+            unit("1% low");
+          }
+          break;
         }
+        case Seg::FrameTime: {
+          if (!d.fps.valid || d.fps.fps <= 0) {
+            pen.Text(st.regular, small, Col(t.subtext), "no game");
+            break;
+          }
+          char num[16];
+          snprintf(num, sizeof(num), "%.1f", 1000.0f / d.fps.fps);
+          pen.Text(st.bold, fs, Col(t.text), num, true, 2);
+          unit("ms");
+          break;
+        }
+        case Seg::Ping: {
+          if (d.ping.state == PingState::Ok) {
+            const ImVec4& c = d.ping.ms < 50 ? t.good : d.ping.ms < 100 ? t.warn : t.bad;
+            char num[16];
+            snprintf(num, sizeof(num), "%d", d.ping.ms);
+            pen.Text(st.bold, fs, Col(c), num, true, 2);
+            unit("ms");
+          } else {
+            const char* msg = d.ping.state == PingState::Blocked ? "server blocks ping"
+                              : d.ping.state == PingState::Searching ? "finding server"
+                                                                      : "no game";
+            pen.Text(st.regular, small, Col(t.subtext), msg);
+          }
+          break;
+        }
+        case Seg::Game:
+          if (d.game.empty()) pen.Text(st.regular, small, Col(t.subtext), "no game");
+          else pen.Text(st.regular, fs, Col(t.text), d.game.c_str());
+          break;
+        case Seg::Session:
+          if (d.session.empty()) pen.Text(st.regular, small, Col(t.subtext), "no game");
+          else pen.Text(st.regular, fs, Col(t.text), d.session.c_str(), true);
+          break;
+        case Seg::Date: pen.Text(st.regular, fs, Col(t.text), d.date.c_str(), true); break;
+        case Seg::Time: pen.Text(st.regular, fs, Col(t.text), d.time.c_str(), true); break;
+        case Seg::Cpu: percent(d.cpu); unit("CPU"); break;
+        case Seg::Gpu: percent(d.gpu); unit("GPU"); break;
+        case Seg::Ram: percent(d.ram); unit("RAM"); break;
+        case Seg::User: pen.Text(st.regular, fs, Col(t.text), d.user.c_str()); break;
       }
-    }
-
-    if (d.showPing && d.ping.state != PingState::Off) {
-      segmentIcon(IconSignal);
-      if (d.ping.state == PingState::Ok) {
-        const ImVec4& c = d.ping.ms < 50 ? t.good : d.ping.ms < 100 ? t.warn : t.bad;
-        char num[16];
-        snprintf(num, sizeof(num), "%d", d.ping.ms);
-        pen.Text(st.bold, fs, Col(c), num, true, 2);
-        pen.Space(fs * 0.25f);
-        pen.Text(st.regular, small, Col(t.subtext), "ms");
-      } else {
-        const char* msg = d.ping.state == PingState::Blocked   ? "server blocks ping"
-                          : d.ping.state == PingState::NoGame ? "no game"
-                                                               : "finding server";
-        pen.Text(st.regular, small, Col(t.subtext), msg);
-      }
-    }
-
-    if (d.showTime) {
-      segmentIcon(IconClock);
-      pen.Text(st.regular, fs, Col(t.text), d.time.c_str(), true);
-    }
-
-    if (d.showUser && !d.user.empty()) {
-      segmentIcon(IconUser);
-      pen.Text(st.regular, fs, Col(t.text), d.user.c_str());
     }
     return pen.x + padX - pos.x;
   };

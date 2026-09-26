@@ -1,6 +1,6 @@
 # EtwSession
 
-> 30 nodes · cohesion 0.09
+> 31 nodes · cohesion 0.09
 
 ## Key Concepts
 
@@ -13,6 +13,7 @@
 - **EnableNetwork** (3 connections) — `src/providers/etw_session.h`
 - **OnEvent** (3 connections) — `src/providers/etw_session.h`
 - **Stop** (3 connections) — `src/providers/etw_session.h`
+- **etw_session** (2 connections)
 - **.Status()** (2 connections) — `src/providers/etw_session.h`
 - **EtwStatus** (2 connections)
 - **USHORT** (2 connections)
@@ -28,8 +29,7 @@
 - **session_** (1 connections) — `src/providers/etw_session.h`
 - **thread_** (1 connections) — `src/providers/etw_session.h`
 - **trace_** (1 connections) — `src/providers/etw_session.h`
-- **Count** (1 connections) — `src/providers/etw_session.cpp`
-- *... and 5 more nodes in this community*
+- *... and 6 more nodes in this community*
 
 ## Relationships
 
@@ -44,7 +44,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 46 (96%)
+- EXTRACTED: 47 (96%)
 - INFERRED: 2 (4%)
 - AMBIGUOUS: 0 (0%)
 

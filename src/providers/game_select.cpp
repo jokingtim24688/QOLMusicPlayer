@@ -80,10 +80,25 @@ void GameSelector::Update(FpsProvider& fps, const std::string& pinnedExe, HWND o
     pid_ = next;
     exe_ = next ? NameOf(next) : std::string();
     monitor_ = nullptr;
+    window_ = nullptr;
+    sessionStart_ = next ? QpcNow() : 0;
     if (next) {
       FindWindowCtx ctx{next, nullptr, 0};
       EnumWindows(FindLargestWindow, reinterpret_cast<LPARAM>(&ctx));
+      window_ = ctx.best;
       if (ctx.best) monitor_ = MonitorFromWindow(ctx.best, MONITOR_DEFAULTTOPRIMARY);
     }
   }
 }
+
+std::string GameSelector::Title() const {
+  if (!pid_) return {};
+  wchar_t buf[128];
+  // GetWindowText on another process's window returns the cached title; nothing is sent to the game.
+  if (window_ && IsWindow(window_) && GetWindowTextW(window_, buf, 128) > 0) return WideToUtf8(buf);
+  std::string name = exe_;
+  if (name.size() > 4 && _stricmp(name.c_str() + name.size() - 4, ".exe") == 0) name.resize(name.size() - 4);
+  return name;
+}
+
+double GameSelector::SessionSeconds() const { return sessionStart_ ? QpcSeconds(QpcNow() - sessionStart_) : 0.0; }

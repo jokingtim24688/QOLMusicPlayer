@@ -164,6 +164,12 @@ bool SelectRow(const char* id, bool selected, float height, ImVec2* min, ImVec2*
   return clicked;
 }
 
+bool ClickedOutsideWindows() {
+  return ImGui::IsMouseClicked(0) &&
+         !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow | ImGuiHoveredFlags_AllowWhenBlockedByActiveItem |
+                                 ImGuiHoveredFlags_AllowWhenBlockedByPopup);
+}
+
 bool KeybindButton(const char* label, const std::string& keyName, bool capturing) {
   ImGui::PushID(label);
   const ImGuiID id = ImGui::GetID("##bind");

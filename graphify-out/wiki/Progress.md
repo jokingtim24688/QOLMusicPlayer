@@ -1,11 +1,11 @@
-# External Overlay — Research & Plan
+# Progress
 
-> 18 nodes · cohesion 0.11
+> 19 nodes · cohesion 0.11
 
 ## Key Concepts
 
+- **Progress** (7 connections) — `Progress.md`
 - **External Overlay — Research & Plan** (6 connections) — `docs/PLAN.md`
-- **Progress** (6 connections) — `Progress.md`
 - **1. Research findings** (5 connections) — `docs/PLAN.md`
 - **PLAN.md** (2 connections) — `docs/PLAN.md`
 - **Progress.md** (2 connections) — `Progress.md`
@@ -20,6 +20,7 @@
 - **2026-09-26 — Anti-vibe design pass (still no code)** (1 connections) — `Progress.md`
 - **2026-09-26 — Research & planning (no code yet)** (1 connections) — `Progress.md`
 - **2026-09-26 — v0.2.0: Spotify player + installer** (1 connections) — `Progress.md`
+- **2026-09-26 — v0.3.0: fixes, Bar tab, date, auto-update** (1 connections) — `Progress.md`
 - **2026-09-26 — v1 built** (1 connections) — `Progress.md`
 - **Next** (1 connections) — `Progress.md`
 
@@ -34,7 +35,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 17 (100%)
+- EXTRACTED: 18 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

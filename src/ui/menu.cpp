@@ -6,9 +6,12 @@
 #include <cstring>
 #include <vector>
 
+#include "app_info.h"
 #include "input/hotkeys.h"
+#include "providers/clock.h"
 #include "ui/anim.h"
 #include "ui/theme.h"
+#include "ui/watermark.h"
 #include "ui/widgets.h"
 
 using ui::S;
@@ -16,8 +19,8 @@ using ui::T;
 
 namespace {
 
-const char* const kTabs[] = {"Overlay", "Music", "Game", "Theme", "Font", "Keybinds"};
-constexpr int kTabCount = 6;
+const char* const kTabs[] = {"Overlay", "Bar", "Music", "Game", "Theme", "Font", "Keybinds", "About"};
+constexpr int kTabCount = 8;
 
 // Scales every vertex added to `dl` since `start` around `center`. ImGui has no transforms, so the
 // open/close zoom is applied to the finished geometry.
@@ -131,11 +134,13 @@ void Menu::Draw(MenuContext& ctx, float openT, MenuEvents& ev) {
   ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(S(8), S(4)));
   switch (tab_) {
     case 0: TabOverlay(ctx, ev); break;
-    case 1: TabMusic(ctx, ev); break;
-    case 2: TabGame(ctx, ev); break;
-    case 3: TabTheme(ctx, ev); break;
-    case 4: TabFont(ctx, ev); break;
-    case 5: TabKeybinds(ctx, ev); break;
+    case 1: TabBar(ctx, ev); break;
+    case 2: TabMusic(ctx, ev); break;
+    case 3: TabGame(ctx, ev); break;
+    case 4: TabTheme(ctx, ev); break;
+    case 5: TabFont(ctx, ev); break;
+    case 6: TabKeybinds(ctx, ev); break;
+    case 7: TabAbout(ctx, ev); break;
     default: break;
   }
   Gap(12);
@@ -165,25 +170,8 @@ void Menu::Draw(MenuContext& ctx, float openT, MenuEvents& ev) {
 void Menu::TabOverlay(MenuContext& ctx, MenuEvents& ev) {
   Config& c = *ctx.cfg;
   ui::Heading("Overlay");
-  ui::Note("What the watermark shows. Changes apply instantly.");
+  ui::Note("Where the bar sits and how it looks. Pick what's on it in the Bar tab.");
   Gap(8);
-
-  ev.changed |= ui::Toggle("Frame rate", &c.showFps);
-  if (c.showFps) ev.changed |= ui::Toggle("1% low next to FPS", &c.showLow);
-  ev.changed |= ui::Toggle("Ping", &c.showPing);
-  ev.changed |= ui::Toggle("Clock", &c.showTime);
-  if (c.showTime) {
-    int fmt = c.clock24h ? 1 : 0;
-    const char* items[] = {"12-hour", "24-hour"};
-    Gap(2);
-    if (ui::Segmented("clockfmt", &fmt, items, 2)) {
-      c.clock24h = fmt == 1;
-      ev.changed = true;
-    }
-    Gap(2);
-    ev.changed |= ui::Toggle("Show seconds", &c.clockSeconds);
-  }
-  ev.changed |= ui::Toggle("Username", &c.showUser);
 
   SubLabel("Position");
   int corner = static_cast<int>(c.corner);
@@ -194,10 +182,145 @@ void Menu::TabOverlay(MenuContext& ctx, MenuEvents& ev) {
   }
   Gap(8);
   ev.changed |= ui::Slider("Background opacity", &c.opacity, Config::kMinOpacity, 1.0f, "%.2f");
-  Gap(6);
+
+  SubLabel("Formats");
+  ev.changed |= ui::Toggle("1% low next to FPS", &c.showLow);
+  int fmt = c.clock24h ? 1 : 0;
+  const char* clockItems[] = {"12-hour clock", "24-hour clock"};
+  if (ui::Segmented("clockfmt", &fmt, clockItems, 2)) {
+    c.clock24h = fmt == 1;
+    ev.changed = true;
+  }
+  Gap(2);
+  ev.changed |= ui::Toggle("Show seconds", &c.clockSeconds);
+  Gap(2);
+  if (ui::Segmented("datefmt", &c.dateFormat, kDateFormats, kDateFormatCount)) ev.changed = true;
+
+  Gap(8);
   ev.changed |= ui::TextField("Logo text", &c.logoText, "QOL");
   Gap(6);
   ev.changed |= ui::TextField("Display name", &c.username, "Windows account name");
+}
+
+namespace {
+
+enum class Glyph { Up, Down, Remove, Add };
+
+// Small square icon button for list rows. Returns true when clicked.
+bool GlyphButton(const char* id, ImVec2 pos, float size, Glyph g, bool enabled) {
+  ImGui::SetCursorScreenPos(pos);
+  const bool clicked = ImGui::InvisibleButton(id, ImVec2(size, size)) && enabled;
+  const float hover = anim::Spring(ImGui::GetID(id), enabled && ImGui::IsItemHovered() ? 1.0f : 0.0f, 30.0f);
+  ImDrawList* dl = ImGui::GetWindowDrawList();
+  const ImVec2 c = pos + ImVec2(size, size) * 0.5f;
+  if (hover > 0.01f) dl->AddRectFilled(pos, pos + ImVec2(size, size), Col(T().surface1, hover), S(6));
+  const ImU32 col = !enabled ? Col(T().subtext, 0.3f)
+                    : g == Glyph::Remove ? Col(Mix(T().subtext, T().bad, hover))
+                    : g == Glyph::Add    ? Col(T().accent)
+                                         : Col(Mix(T().subtext, T().text, hover));
+  const float r = size * 0.18f, t = S(1.8f);
+  switch (g) {
+    case Glyph::Up:
+      dl->AddLine(ImVec2(c.x - r, c.y + r * 0.5f), ImVec2(c.x, c.y - r * 0.5f), col, t);
+      dl->AddLine(ImVec2(c.x, c.y - r * 0.5f), ImVec2(c.x + r, c.y + r * 0.5f), col, t);
+      break;
+    case Glyph::Down:
+      dl->AddLine(ImVec2(c.x - r, c.y - r * 0.5f), ImVec2(c.x, c.y + r * 0.5f), col, t);
+      dl->AddLine(ImVec2(c.x, c.y + r * 0.5f), ImVec2(c.x + r, c.y - r * 0.5f), col, t);
+      break;
+    case Glyph::Remove:
+      dl->AddLine(c - ImVec2(r, r), c + ImVec2(r, r), col, t);
+      dl->AddLine(c + ImVec2(-r, r), c + ImVec2(r, -r), col, t);
+      break;
+    case Glyph::Add:
+      dl->AddLine(ImVec2(c.x - r, c.y), ImVec2(c.x + r, c.y), col, t);
+      dl->AddLine(ImVec2(c.x, c.y - r), ImVec2(c.x, c.y + r), col, t);
+      break;
+  }
+  return clicked;
+}
+
+}  // namespace
+
+void Menu::TabBar(MenuContext& ctx, MenuEvents& ev) {
+  Config& c = *ctx.cfg;
+  ui::Heading("Bar");
+  ui::Note("Add things to the bar and put them in order. The bar updates as you go.");
+
+  SubLabel("On the bar");
+  ImDrawList* dl = ImGui::GetWindowDrawList();
+  const float w = ImGui::GetContentRegionAvail().x, rowH = S(42), btn = S(28);
+  const ImVec2 top = ImGui::GetCursorScreenPos();
+  const int n = static_cast<int>(c.segments.size());
+  ImGui::Dummy(ImVec2(w, rowH * static_cast<float>(std::max(n, 1))));
+  const ImVec2 after = ImGui::GetCursorScreenPos();
+  if (n == 0) dl->AddText(top + ImVec2(S(10), S(10)), Col(T().subtext), "Only the logo is showing. Add something below.");
+
+  int moveFrom = -1, moveTo = -1, removeAt = -1;
+  for (int i = 0; i < n; ++i) {
+    const Seg seg = c.segments[static_cast<size_t>(i)];
+    ImGui::PushID(static_cast<int>(seg));
+    // Rows glide to their new slot when reordered; a newly added row slides up into place.
+    const float target = rowH * static_cast<float>(i);
+    const float y = anim::Spring(ImGui::GetID("##y"), target, 22.0f, target + S(14));
+    const ImVec2 a = top + ImVec2(0, y), b = a + ImVec2(w, rowH - S(4));
+    ImGui::SetCursorScreenPos(a);
+    ImGui::SetNextItemAllowOverlap();
+    ImGui::InvisibleButton("##row", b - a);
+    const float hover = anim::Spring(ImGui::GetID("##hv"), ImGui::IsItemHovered() ? 1.0f : 0.0f, 30.0f);
+    dl->AddRectFilled(a, b, Col(T().surface0, 0.45f + 0.35f * hover), S(8));
+    const float cy = (a.y + b.y) * 0.5f;
+    SegmentIcon(seg, dl, ImVec2(a.x + S(22), cy), S(14), Col(T().accent));
+    dl->AddText(ImVec2(a.x + S(42), cy - ImGui::GetTextLineHeight() * 0.5f), Col(T().text), InfoOf(seg).name);
+
+    const float by = cy - btn * 0.5f;
+    if (GlyphButton("##rm", ImVec2(b.x - S(6) - btn, by), btn, Glyph::Remove, true)) removeAt = i;
+    if (GlyphButton("##dn", ImVec2(b.x - S(8) - btn * 2, by), btn, Glyph::Down, i < n - 1)) {
+      moveFrom = i;
+      moveTo = i + 1;
+    }
+    if (GlyphButton("##up", ImVec2(b.x - S(10) - btn * 3, by), btn, Glyph::Up, i > 0)) {
+      moveFrom = i;
+      moveTo = i - 1;
+    }
+    ImGui::PopID();
+  }
+  ImGui::SetCursorScreenPos(after);
+  if (moveFrom >= 0) {
+    std::swap(c.segments[static_cast<size_t>(moveFrom)], c.segments[static_cast<size_t>(moveTo)]);
+    ev.changed = true;
+  } else if (removeAt >= 0) {
+    c.segments.erase(c.segments.begin() + removeAt);
+    ev.changed = true;
+  }
+
+  SubLabel("Add to the bar");
+  bool any = false;
+  for (const SegInfo& info : AllSegments()) {
+    if (HasSeg(c.segments, info.id)) continue;
+    any = true;
+    ImGui::PushID(info.key);
+    ImVec2 a, b;
+    const float h = S(50);
+    if (ui::SelectRow("##add", false, h, &a, &b)) {
+      c.segments.push_back(info.id);
+      ev.changed = true;
+    }
+    const float line = ImGui::GetTextLineHeight();
+    SegmentIcon(info.id, dl, ImVec2(a.x + S(22), a.y + h * 0.5f), S(14), Col(T().subtext));
+    dl->AddText(a + ImVec2(S(42), h * 0.5f - line - S(1)), Col(T().text), info.name);
+    dl->AddText(a + ImVec2(S(42), h * 0.5f + S(1)), Col(T().subtext), info.desc);
+    const ImVec2 plus(b.x - S(6) - S(28), a.y + (h - S(28)) * 0.5f);
+    dl->AddRectFilled(plus, plus + ImVec2(S(28), S(28)), Col(T().surface1, 0.8f), S(6));
+    const ImVec2 pc = plus + ImVec2(S(14), S(14));
+    dl->AddLine(pc - ImVec2(S(5), 0), pc + ImVec2(S(5), 0), Col(T().accent), S(1.8f));
+    dl->AddLine(pc - ImVec2(0, S(5)), pc + ImVec2(0, S(5)), Col(T().accent), S(1.8f));
+    ImGui::PopID();
+  }
+  if (!any) {
+    ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
+    ui::Note("Everything is already on the bar.");
+  }
 }
 
 void Menu::TabMusic(MenuContext& ctx, MenuEvents& ev) {
@@ -298,7 +421,7 @@ void Menu::TabGame(MenuContext& ctx, MenuEvents& ev) {
     ImGui::PopID();
   }
 
-  if (c.showPing && ctx.ping.state != PingState::Off) {
+  if (HasSeg(c.segments, Seg::Ping) && ctx.ping.state != PingState::Off) {
     SubLabel("Ping");
     ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
     char buf[160];
@@ -413,4 +536,48 @@ void Menu::TabKeybinds(MenuContext& ctx, MenuEvents& ev) {
   Gap(14);
   ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
   ui::Note("Binds are registered with Windows as normal hotkeys. Nothing hooks your keyboard.");
+}
+
+void Menu::TabAbout(MenuContext& ctx, MenuEvents& ev) {
+  Config& c = *ctx.cfg;
+  ui::Heading("About");
+  ui::Note("QOL Overlay " QOL_VERSION, T().text);
+  Gap(10);
+  ev.changed |= ui::Toggle("Install updates automatically", &c.autoUpdate);
+  Gap(4);
+  ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
+  ui::Note("Checks GitHub every few hours. Updates download in the background, are checked against their published "
+           "SHA-256, and only install while no game is running. The overlay restarts by itself afterwards.");
+  Gap(10);
+
+  const UpdateStatus& u = ctx.update;
+  std::string status;
+  ImVec4 color = T().subtext;
+  switch (u.state) {
+    case UpdateState::Idle: status = "Hasn't checked yet."; break;
+    case UpdateState::Checking: status = "Checking for updates..."; break;
+    case UpdateState::UpToDate: status = "You're on the latest version."; color = T().good; break;
+    case UpdateState::Downloading: status = "Downloading " + u.latest + "..."; break;
+    case UpdateState::Ready:
+      status = u.latest + " is ready. " +
+               (c.autoUpdate ? std::string("It installs next time no game is running.") : std::string("Install it below."));
+      color = T().accent;
+      break;
+    case UpdateState::Failed: status = "Update check failed: " + u.error; color = T().warn; break;
+  }
+  ImGui::SetCursorPosX(ImGui::GetCursorPosX() + S(10));
+  ui::Note(status.c_str(), color);
+  Gap(8);
+
+  const bool busy = u.state == UpdateState::Checking || u.state == UpdateState::Downloading;
+  const bool ready = u.state == UpdateState::Ready;
+  ImVec2 a, b;
+  if (ui::SelectRow("##update", false, S(40), &a, &b) && !busy) {
+    if (ready) ev.installUpdate = true;
+    else ev.checkUpdates = true;
+  }
+  const std::string label = ready ? "Install " + u.latest + " now" : busy ? "Working..." : "Check for updates";
+  ImGui::GetWindowDrawList()->AddRect(a, b, Col(ready ? T().accent : T().overlay, ready ? 0.9f : 0.5f), S(8));
+  ImGui::GetWindowDrawList()->AddText(a + ImVec2(S(18), (S(40) - ImGui::GetTextLineHeight()) * 0.5f),
+                                      Col(busy ? T().subtext : T().text), label.c_str());
 }

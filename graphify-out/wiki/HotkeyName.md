@@ -12,12 +12,12 @@
 
 ## Relationships
 
-- [app.cpp](app.cpp.md) (6 shared connections)
+- [app.cpp](app.cpp.md) (5 shared connections)
 - [Hotkeys](Hotkeys.md) (3 shared connections)
 - [App](App.md) (2 shared connections)
-- [HandleMessage](HandleMessage.md) (1 shared connections)
+- [HandleMessage](HandleMessage.md) (2 shared connections)
 - [MenuContext](MenuContext.md) (1 shared connections)
-- [GameSelector](GameSelector.md) (1 shared connections)
+- [FpsProvider](FpsProvider.md) (1 shared connections)
 
 ## Source Files
 

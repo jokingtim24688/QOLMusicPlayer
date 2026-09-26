@@ -1,6 +1,6 @@
 # OverlayWindow
 
-> 20 nodes · cohesion 0.14
+> 19 nodes · cohesion 0.15
 
 ## Key Concepts
 
@@ -8,7 +8,6 @@
 - **window.cpp** (8 connections) — `src/overlay/window.cpp`
 - **SetRect** (5 connections) — `src/overlay/window.h`
 - **Create** (4 connections) — `src/overlay/window.h`
-- **window.h** (3 connections) — `src/overlay/window.h`
 - **HWND** (2 connections)
 - **Destroy** (2 connections) — `src/overlay/window.h`
 - **.Height()** (2 connections) — `src/overlay/window.h`
@@ -27,8 +26,9 @@
 
 ## Relationships
 
-- [app.h](app.h.md) (3 shared connections)
+- [Updater](Updater.md) (1 shared connections)
 - [App](App.md) (1 shared connections)
+- [app.h](app.h.md) (1 shared connections)
 
 ## Source Files
 
@@ -37,8 +37,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 29 (94%)
-- INFERRED: 2 (6%)
+- EXTRACTED: 27 (93%)
+- INFERRED: 2 (7%)
 - AMBIGUOUS: 0 (0%)
 
 ---

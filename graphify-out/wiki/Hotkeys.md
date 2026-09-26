@@ -20,12 +20,13 @@
 ## Relationships
 
 - [HotkeyName](HotkeyName.md) (3 shared connections)
-- [preview.cpp](preview.cpp.md) (2 shared connections)
 - [app.h](app.h.md) (2 shared connections)
 - [Config](Config.md) (1 shared connections)
+- [LoadFile](LoadFile.md) (1 shared connections)
 - [FpsProvider](FpsProvider.md) (1 shared connections)
 - [App](App.md) (1 shared connections)
 - [MenuContext](MenuContext.md) (1 shared connections)
+- [preview.cpp](preview.cpp.md) (1 shared connections)
 
 ## Source Files
 

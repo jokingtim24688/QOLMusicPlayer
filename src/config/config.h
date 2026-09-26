@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include <vector>
+
+#include "config/segments.h"
 
 enum class Corner { TopLeft, TopRight, BottomLeft, BottomRight };
 
@@ -16,13 +19,11 @@ struct Config {
   float opacity = 0.86f;  // watermark fill opacity; UI clamps to kMinOpacity for readability
   Corner corner = Corner::TopRight;
 
-  // Watermark segments
+  // Bar contents, in order (edited in the menu's Bar tab)
   std::string logoText = "QOL";
-  bool showFps = true;
-  bool showLow = true;
-  bool showPing = true;
-  bool showTime = true;
-  bool showUser = true;
+  std::vector<Seg> segments{Seg::Fps, Seg::Ping, Seg::Date, Seg::Time, Seg::User};
+  bool showLow = true;  // 1% low next to FPS
+  int dateFormat = 0;   // index into kDateFormats (src/providers/clock.h)
   bool clock24h = false;
   bool clockSeconds = false;
   std::string username;  // empty = Windows account name
@@ -37,9 +38,13 @@ struct Config {
   std::string pinnedExe;
 
   // Keybinds
-  Hotkey menuKey{0x2D /*VK_INSERT*/, 0};
+  Hotkey menuKey{0x2E /*VK_DELETE*/, 0};
   Hotkey toggleKey{0x23 /*VK_END*/, 0};
   bool overlayVisible = true;
+
+  // Updates
+  bool autoUpdate = true;
+  std::string lastVersion;  // version that last ran, to say "updated" once
 
   static constexpr float kMinOpacity = 0.70f;
 

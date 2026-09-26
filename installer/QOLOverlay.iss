@@ -48,11 +48,18 @@ Name: "{autoprograms}\Uninstall {#AppName}"; Filename: "{uninstallexe}"
 [Run]
 ; Checked by default on the last page, so finishing the wizard opens the overlay.
 Filename: "{app}\{#AppExe}"; Description: "Launch {#AppName}"; Flags: nowait postinstall skipifsilent shellexec
+; Silent auto-update (the app runs this installer with /update=1): start the new version straight away.
+Filename: "{app}\{#AppExe}"; Flags: nowait shellexec; Check: IsUpdate
 
 [UninstallRun]
 Filename: "{sys}\taskkill.exe"; Parameters: "/F /IM {#AppExe}"; Flags: runhidden; RunOnceId: "StopOverlay"
 
 [Code]
+function IsUpdate: Boolean;
+begin
+  Result := ExpandConstant('{param:update|0}') = '1';
+end;
+
 // Close a running copy so an update can replace the exe.
 function PrepareToInstall(var NeedsRestart: Boolean): String;
 var

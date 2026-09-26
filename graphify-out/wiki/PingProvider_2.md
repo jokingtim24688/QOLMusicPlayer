@@ -16,7 +16,7 @@
 - Worker `EXTRACTED`
 - PickEndpoint `EXTRACTED`
 - Echo `EXTRACTED`
-- [SetTarget](SetTarget.md) `EXTRACTED`
+- SetTarget `EXTRACTED`
 - [OnNetworkSend](OnNetworkSend.md) `EXTRACTED`
 - Sample `EXTRACTED`
 - Start `EXTRACTED`

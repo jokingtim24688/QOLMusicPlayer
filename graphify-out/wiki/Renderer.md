@@ -33,7 +33,7 @@
 
 ## Relationships
 
-- [Config](Config.md) (1 shared connections)
+- [algorithm](algorithm.md) (1 shared connections)
 - [app.h](app.h.md) (1 shared connections)
 - [App](App.md) (1 shared connections)
 

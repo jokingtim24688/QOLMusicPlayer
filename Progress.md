@@ -45,6 +45,23 @@
   environment, so CI creates the release from pushes to the release branch (version from CMakeLists.txt).
   Install command: see README "Install".
 
+## 2026-09-26 — v0.3.0: fixes, Bar tab, date, auto-update
+- **Fixed:** clicking any menu button (tabs, player controls) closed the menu. ImGui's IsWindowHovered returns
+  false on the frame a button becomes active, so the "click outside closes the menu" check fired. Now
+  ui::ClickedOutsideWindows() passes AllowWhenBlockedByActiveItem. The player buttons failed for the same reason
+  (the menu closed on press, before the release that triggers the button).
+- Regression test in tools/preview: simulated clicks on a tab, the play button and empty space (fails with the
+  old check, passes now).
+- Bar contents are now an ordered list (Config::segments) edited in a new **Bar** tab: add/remove/reorder with
+  animated rows. New items: date (default on), frame time, game name (window title), time in game, CPU %, GPU %
+  (PDH 3D engine), RAM %. Old configs are migrated (show_* flags → list, date added).
+- Menu key default is now **Delete**; existing configs still on Insert are moved to Delete once (config v2).
+- **Auto-updater** (src/update): GitHub latest-release check at start + every 6 h (WinHTTP), downloads
+  QOLOverlay-Setup.exe + .sha256, verifies with BCrypt, installs silently (/update=1 relaunches the app) only
+  when no game is running and the menu is closed. About tab: toggle, status, check/install now. Tray balloon
+  after an update. CI publishes the .sha256 next to the installer.
+- Note: v0.2.0 has no updater, so v0.2.0 installs need the install command once more.
+
 ## Next
 - User tests on Windows (CS2 borderless): FPS vs cl_showfps, ping vs scoreboard, CPU use at idle.
 - Pick the final name.

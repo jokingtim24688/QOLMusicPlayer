@@ -1,6 +1,6 @@
 # WatermarkData
 
-> God node · 21 connections · `src/ui/watermark.h`
+> God node · 26 connections · `src/ui/watermark.h`
 
 **Community:** [WatermarkData](WatermarkData.md)
 
@@ -12,17 +12,20 @@
 ### defines
 - Signature `EXTRACTED`
 - logo `EXTRACTED`
-- showFps `EXTRACTED`
+- segments `EXTRACTED`
 - showLow `EXTRACTED`
-- showPing `EXTRACTED`
-- showTime `EXTRACTED`
-- showUser `EXTRACTED`
 - fps `EXTRACTED`
 - fpsProblem `EXTRACTED`
 - refreshHz `EXTRACTED`
 - ping `EXTRACTED`
+- date `EXTRACTED`
+- game `EXTRACTED`
+- session `EXTRACTED`
 - time `EXTRACTED`
 - user `EXTRACTED`
+- cpu `EXTRACTED`
+- gpu `EXTRACTED`
+- ram `EXTRACTED`
 
 ### references
 - [App](App.md) `EXTRACTED`
@@ -32,6 +35,8 @@
 - LoadFile() `INFERRED`
 - SampleData() `EXTRACTED`
 - string `EXTRACTED`
+- vector `EXTRACTED`
+- Seg `EXTRACTED`
 
 ---
 

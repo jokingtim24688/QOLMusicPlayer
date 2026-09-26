@@ -1,6 +1,6 @@
 # MenuContext
 
-> God node · 26 connections · `src/ui/menu.h`
+> God node · 30 connections · `src/ui/menu.h`
 
 **Community:** [MenuContext](MenuContext.md)
 
@@ -19,17 +19,21 @@
 - capture `EXTRACTED`
 - keyError `EXTRACTED`
 - player `EXTRACTED`
+- update `EXTRACTED`
 
 ### references
 - [Config](Config.md) `EXTRACTED`
 - [GameSelector](GameSelector.md) `EXTRACTED`
-- PlayerData `EXTRACTED`
 - Draw `EXTRACTED`
+- PlayerData `EXTRACTED`
 - TabGame `EXTRACTED`
-- Fonts `EXTRACTED`
+- [Fonts](Fonts.md) `EXTRACTED`
+- TabBar `EXTRACTED`
 - [PingSample](PingSample.md) `EXTRACTED`
+- UpdateStatus `EXTRACTED`
 - TabTheme `EXTRACTED`
 - FpsSample `EXTRACTED`
+- TabAbout `EXTRACTED`
 - TabFont `EXTRACTED`
 - TabKeybinds `EXTRACTED`
 - TabMusic `EXTRACTED`

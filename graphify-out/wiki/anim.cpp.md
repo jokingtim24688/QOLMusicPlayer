@@ -23,7 +23,7 @@
 - [player.cpp](player.cpp.md) (2 shared connections)
 - [preview.cpp](preview.cpp.md) (2 shared connections)
 - [app.cpp](app.cpp.md) (1 shared connections)
-- [WatermarkData](WatermarkData.md) (1 shared connections)
+- [watermark.cpp](watermark.cpp.md) (1 shared connections)
 - [app.h](app.h.md) (1 shared connections)
 
 ## Source Files

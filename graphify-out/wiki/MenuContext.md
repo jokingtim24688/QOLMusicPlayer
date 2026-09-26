@@ -1,50 +1,50 @@
 # MenuContext
 
-> 53 nodes · cohesion 0.09
+> 61 nodes · cohesion 0.08
 
 ## Key Concepts
 
-- **MenuContext** (26 connections) — `src/ui/menu.h`
-- **menu.cpp** (20 connections) — `src/ui/menu.cpp`
-- **Col()** (19 connections) — `src/ui/theme.h`
-- **widgets.cpp** (16 connections) — `src/ui/widgets.cpp`
-- **S()** (16 connections) — `src/ui/widgets.h`
-- **Draw** (15 connections) — `src/ui/menu.h`
-- **Menu** (13 connections) — `src/ui/menu.h`
-- **TabGame** (12 connections) — `src/ui/menu.h`
-- **MenuEvents** (12 connections) — `src/ui/menu.h`
-- **Gap()** (10 connections) — `src/ui/menu.cpp`
-- **Mix()** (10 connections) — `src/ui/theme.h`
+- **MenuContext** (30 connections) — `src/ui/menu.h`
+- **menu.cpp** (26 connections) — `src/ui/menu.cpp`
+- **Col()** (22 connections) — `src/ui/theme.h`
+- **S()** (19 connections) — `src/ui/widgets.h`
+- **Draw** (17 connections) — `src/ui/menu.h`
+- **widgets.cpp** (17 connections) — `src/ui/widgets.cpp`
+- **MenuEvents** (16 connections) — `src/ui/menu.h`
+- **Menu** (15 connections) — `src/ui/menu.h`
+- **TabGame** (13 connections) — `src/ui/menu.h`
+- **Gap()** (11 connections) — `src/ui/menu.cpp`
+- **TabBar** (11 connections) — `src/ui/menu.h`
+- **Mix()** (11 connections) — `src/ui/theme.h`
 - **TabTheme** (9 connections) — `src/ui/menu.h`
+- **TabAbout** (8 connections) — `src/ui/menu.h`
 - **TabFont** (8 connections) — `src/ui/menu.h`
 - **TabKeybinds** (8 connections) — `src/ui/menu.h`
 - **TabMusic** (8 connections) — `src/ui/menu.h`
+- **GlyphButton()** (7 connections) — `src/ui/menu.cpp`
 - **TabOverlay** (7 connections) — `src/ui/menu.h`
 - **CenteredText()** (7 connections) — `src/ui/widgets.cpp`
 - **KeybindButton()** (7 connections) — `src/ui/widgets.cpp`
+- **SubLabel()** (6 connections) — `src/ui/menu.cpp`
 - **LabelEnd()** (6 connections) — `src/ui/widgets.cpp`
-- **SubLabel()** (5 connections) — `src/ui/menu.cpp`
 - **Segmented()** (5 connections) — `src/ui/widgets.cpp`
 - **TextField()** (5 connections) — `src/ui/widgets.cpp`
-- **Toggle()** (5 connections) — `src/ui/widgets.cpp`
-- **ScaleVertices()** (4 connections) — `src/ui/menu.cpp`
-- **SelectRow()** (4 connections) — `src/ui/widgets.cpp`
-- *... and 28 more nodes in this community*
+- *... and 36 more nodes in this community*
 
 ## Relationships
 
 - [app.h](app.h.md) (7 shared connections)
 - [preview.cpp](preview.cpp.md) (6 shared connections)
 - [Theme](Theme.md) (5 shared connections)
-- [Config](Config.md) (5 shared connections)
 - [anim.cpp](anim.cpp.md) (4 shared connections)
+- [watermark.cpp](watermark.cpp.md) (4 shared connections)
 - [GameSelector](GameSelector.md) (4 shared connections)
+- [Tick](Tick.md) (3 shared connections)
 - [player.cpp](player.cpp.md) (3 shared connections)
-- [WatermarkData](WatermarkData.md) (3 shared connections)
+- [algorithm](algorithm.md) (2 shared connections)
+- [Updater](Updater.md) (2 shared connections)
+- [WatermarkData](WatermarkData.md) (2 shared connections)
 - [Hotkeys](Hotkeys.md) (1 shared connections)
-- [App](App.md) (1 shared connections)
-- [HotkeyName](HotkeyName.md) (1 shared connections)
-- [PingSample](PingSample.md) (1 shared connections)
 
 ## Source Files
 
@@ -56,8 +56,8 @@
 
 ## Audit Trail
 
-- EXTRACTED: 120 (71%)
-- INFERRED: 49 (29%)
+- EXTRACTED: 143 (70%)
+- INFERRED: 61 (30%)
 - AMBIGUOUS: 0 (0%)
 
 ---

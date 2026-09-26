@@ -31,6 +31,9 @@ static bool ToBool(const std::string& v) { return v == "1" || v == "true"; }
 void Config::Load() {
   std::ifstream f(std::filesystem::path(ConfigPath(false)));
   if (!f) return;
+  // v1 configs had one show_* flag per segment instead of an ordered list.
+  int version = 1;
+  bool hasSegments = false, oldFps = true, oldPing = true, oldTime = true, oldUser = true;
   std::string line;
   while (std::getline(f, line)) {
     auto eq = line.find('=');
@@ -43,11 +46,17 @@ void Config::Load() {
     else if (k == "opacity") opacity = std::clamp(static_cast<float>(atof(v.c_str())), kMinOpacity, 1.0f);
     else if (k == "corner") corner = static_cast<Corner>(std::clamp(atoi(v.c_str()), 0, 3));
     else if (k == "logo") logoText = v;
-    else if (k == "show_fps") showFps = ToBool(v);
+    else if (k == "version") version = atoi(v.c_str());
+    else if (k == "segments") {
+      segments = SegmentsFromString(v);
+      hasSegments = true;
+    }
+    else if (k == "show_fps") oldFps = ToBool(v);
+    else if (k == "show_ping") oldPing = ToBool(v);
+    else if (k == "show_time") oldTime = ToBool(v);
+    else if (k == "show_user") oldUser = ToBool(v);
     else if (k == "show_low") showLow = ToBool(v);
-    else if (k == "show_ping") showPing = ToBool(v);
-    else if (k == "show_time") showTime = ToBool(v);
-    else if (k == "show_user") showUser = ToBool(v);
+    else if (k == "date_format") dateFormat = std::clamp(atoi(v.c_str()), 0, 4);
     else if (k == "clock_24h") clock24h = ToBool(v);
     else if (k == "clock_seconds") clockSeconds = ToBool(v);
     else if (k == "username") username = v;
@@ -62,8 +71,19 @@ void Config::Load() {
     else if (k == "toggle_vk") toggleKey.vk = static_cast<unsigned>(atoi(v.c_str()));
     else if (k == "toggle_mods") toggleKey.mods = static_cast<unsigned>(atoi(v.c_str()));
     else if (k == "overlay_visible") overlayVisible = ToBool(v);
+    else if (k == "auto_update") autoUpdate = ToBool(v);
+    else if (k == "last_version") lastVersion = v;
   }
-  if (menuKey.vk == 0) menuKey = Hotkey{0x2D, 0};
+  if (!hasSegments) {  // upgrade from v1: keep what was shown, and add the date before the clock
+    segments.clear();
+    if (oldFps) segments.push_back(Seg::Fps);
+    if (oldPing) segments.push_back(Seg::Ping);
+    segments.push_back(Seg::Date);
+    if (oldTime) segments.push_back(Seg::Time);
+    if (oldUser) segments.push_back(Seg::User);
+  }
+  if (version < 2 && menuKey.vk == 0x2D /*Insert*/ && menuKey.mods == 0) menuKey = Hotkey{0x2E /*Delete*/, 0};
+  if (menuKey.vk == 0) menuKey = Hotkey{0x2E, 0};
   if (toggleKey.vk == 0) toggleKey = Hotkey{0x23, 0};
 }
 
@@ -71,17 +91,16 @@ void Config::Save() const {
   std::wstring path = ConfigPath(true);
   if (path.empty()) return;
   std::ostringstream o;
-  o << "theme=" << theme << "\n"
+  o << "version=2\n"
+    << "theme=" << theme << "\n"
     << "font=" << font << "\n"
     << "font_size=" << fontSize << "\n"
     << "opacity=" << opacity << "\n"
     << "corner=" << static_cast<int>(corner) << "\n"
     << "logo=" << logoText << "\n"
-    << "show_fps=" << showFps << "\n"
+    << "segments=" << SegmentsToString(segments) << "\n"
     << "show_low=" << showLow << "\n"
-    << "show_ping=" << showPing << "\n"
-    << "show_time=" << showTime << "\n"
-    << "show_user=" << showUser << "\n"
+    << "date_format=" << dateFormat << "\n"
     << "clock_24h=" << clock24h << "\n"
     << "clock_seconds=" << clockSeconds << "\n"
     << "username=" << username << "\n"
@@ -95,7 +114,9 @@ void Config::Save() const {
     << "menu_mods=" << menuKey.mods << "\n"
     << "toggle_vk=" << toggleKey.vk << "\n"
     << "toggle_mods=" << toggleKey.mods << "\n"
-    << "overlay_visible=" << overlayVisible << "\n";
+    << "overlay_visible=" << overlayVisible << "\n"
+    << "auto_update=" << autoUpdate << "\n"
+    << "last_version=" << lastVersion << "\n";
   std::ofstream f(std::filesystem::path(path), std::ios::trunc);
   f << o.str();
 }

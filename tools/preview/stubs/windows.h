@@ -10,6 +10,8 @@ typedef unsigned long ULONG;
 typedef unsigned long long ULONGLONG;
 typedef long long LONGLONG;
 typedef void* HANDLE;
+typedef unsigned int UINT;
+#define WM_APP 0x8000
 typedef struct HWND__* HWND;
 typedef struct HMONITOR__* HMONITOR;
 #define WINAPI

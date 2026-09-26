@@ -22,12 +22,11 @@
 
 - [PingProvider](PingProvider.md) (5 shared connections)
 - [app.h](app.h.md) (2 shared connections)
+- [OnNetworkSend](OnNetworkSend.md) (2 shared connections)
 - [Endpoint](Endpoint.md) (2 shared connections)
-- [Config](Config.md) (1 shared connections)
+- [algorithm](algorithm.md) (1 shared connections)
 - [Theme](Theme.md) (1 shared connections)
 - [PingSample](PingSample.md) (1 shared connections)
-- [SetTarget](SetTarget.md) (1 shared connections)
-- [OnNetworkSend](OnNetworkSend.md) (1 shared connections)
 
 ## Source Files
 

@@ -12,11 +12,13 @@
 #include "providers/game_select.h"
 #include "providers/media.h"
 #include "providers/ping.h"
+#include "providers/system_stats.h"
 #include "ui/fonts.h"
 #include "ui/menu.h"
 #include "ui/player.h"
 #include "ui/theme.h"
 #include "ui/watermark.h"
+#include "update/updater.h"
 
 class App {
  public:
@@ -37,6 +39,8 @@ class App {
   void StartCapture(Capture which);
   void FinishCapture(unsigned vk);
   void SaveIfDirty();
+  void InstallUpdate();
+  void Balloon(const wchar_t* title, const wchar_t* text);
 
   void TrayAdd();
   void TrayRemove();
@@ -50,6 +54,8 @@ class App {
   PingProvider ping_;
   EtwSession etw_;
   MediaProvider media_;
+  SystemStats stats_;
+  Updater updater_;
   GameSelector games_;
   Fonts fonts_;
   ThemeAnimator theme_;
@@ -80,4 +86,5 @@ class App {
   UINT taskbarCreatedMsg_ = 0;
   HMONITOR refreshMonitor_ = nullptr;
   float refreshHz_ = 60.0f;
+  UpdateState lastUpdateState_ = UpdateState::Idle;
 };

@@ -1,10 +1,12 @@
 # PingProvider
 
-> 21 nodes · cohesion 0.10
+> 23 nodes · cohesion 0.09
 
 ## Key Concepts
 
 - **PingProvider** (36 connections) — `src/providers/ping.h`
+- **deque** (2 connections)
+- **map** (2 connections)
 - **atomic** (1 connections)
 - **condition_variable** (1 connections)
 - **DWORD** (1 connections)
@@ -30,10 +32,9 @@
 
 - [ping.cpp](ping.cpp.md) (5 shared connections)
 - [app.h](app.h.md) (3 shared connections)
+- [OnNetworkSend](OnNetworkSend.md) (2 shared connections)
 - [PingSample](PingSample.md) (2 shared connections)
 - [Endpoint](Endpoint.md) (2 shared connections)
-- [SetTarget](SetTarget.md) (1 shared connections)
-- [OnNetworkSend](OnNetworkSend.md) (1 shared connections)
 - [Traffic](Traffic.md) (1 shared connections)
 - [Layout](Layout.md) (1 shared connections)
 
@@ -43,7 +44,7 @@
 
 ## Audit Trail
 
-- EXTRACTED: 36 (100%)
+- EXTRACTED: 38 (100%)
 - INFERRED: 0 (0%)
 - AMBIGUOUS: 0 (0%)
 

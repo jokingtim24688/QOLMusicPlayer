@@ -10,10 +10,14 @@ QOL | ▮▮▮ 219 FPS 167 1% low | ⌔ 23 ms | ◷ 11:44 AM | ● jokingtim
 ## Features
 - **FPS + 1% low** of the selected game, measured with Windows event tracing (the method Intel PresentMon uses).
 - **Ping**: detects the server or relay the game is talking to and measures the round trip to it.
-- **Clock** in your Windows time zone (12/24-hour, optional seconds).
+- **Clock and date** in your Windows time zone (12/24-hour, optional seconds, five date styles).
+- **Pick what's on the bar** (Bar tab): FPS, frame time, ping, game name, time in game, date, clock, CPU %,
+  GPU %, RAM %, your name. Add, remove and reorder them.
 - **Spotify player**: cover art, title, artist, progress, previous / play-pause / next. Drag it anywhere while
   the menu is open. It reads Windows' media controls, so there's no Spotify login.
-- **Menu** with animations: theme, font, which segments show, position, opacity, game selection, keybinds.
+- **Menu** with animations: position and look, bar contents, music, game selection, theme, font, keybinds, updates.
+- **Auto-update**: checks GitHub every few hours, verifies the download's SHA-256, and installs only while no
+  game is running. The overlay restarts by itself.
 - **Themes**: Catppuccin (Mocha, Macchiato, Frappé, Latte), Midnight, Neverlose, Tokyo Night, Dracula, Nord,
   Gruvbox Dark, Rosé Pine, One Dark.
 - **Fonts**: Geist, Geist Mono, JetBrains Mono, IBM Plex Sans, Space Grotesk, Manrope.
@@ -28,13 +32,14 @@ $f="$env:TEMP\QOLOverlay-Setup.exe"; irm https://github.com/jokingtim24688/QOLMu
 
 The installer puts QOL Overlay in Program Files and adds a desktop shortcut and a Start menu entry. It launches
 the overlay when you click Finish. Accept the admin prompt: event tracing for FPS and ping needs it.
-To update, run the same command again. Uninstall it from Windows Settings → Apps.
+Updates install automatically (About tab to turn that off or check now). Running the command again also
+updates. Uninstall it from Windows Settings → Apps.
 
 Play in **borderless** or **windowed** mode. Exclusive fullscreen hides every overlay.
 
 | Key | Action |
 |---|---|
-| `Insert` | Open / close the menu |
+| `Delete` | Open / close the menu |
 | `End` | Show / hide the overlay |
 | `Esc` | Close the menu (or cancel a keybind change) |
 

@@ -33,6 +33,11 @@ bool TextField(const char* label, std::string* value, const char* hint);
 // Full-width selectable row with animated hover/selection. Content is drawn by the caller inside [min, max].
 bool SelectRow(const char* id, bool selected, float height, ImVec2* min, ImVec2* max);
 
+// True on the frame the left mouse button goes down over no ImGui window at all.
+// (IsWindowHovered alone reports false while the clicked button becomes active, which used to make every button
+// press close the menu.)
+bool ClickedOutsideWindows();
+
 // Keybind button: shows the key, or a pulsing "press a key" while capturing.
 bool KeybindButton(const char* label, const std::string& keyName, bool capturing);
 

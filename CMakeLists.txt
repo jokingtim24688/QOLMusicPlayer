@@ -44,6 +44,8 @@ add_executable(QOLOverlay WIN32
   src/providers/game_select.cpp
   src/providers/clock.cpp
   src/providers/media.cpp
+  src/providers/system_stats.cpp
+  src/update/updater.cpp
   src/ui/theme.cpp
   src/ui/fonts.cpp
   src/ui/anim.cpp
@@ -54,10 +56,10 @@ add_executable(QOLOverlay WIN32
   src/config/config.cpp
   res/app.rc)
 target_include_directories(QOLOverlay PRIVATE src res assets/fonts)
-set(QOL_VERSION "0.2.0" CACHE STRING "Version shown in the installer and app")
+set(QOL_VERSION "0.3.0" CACHE STRING "Version shown in the installer and app")
 target_compile_definitions(QOLOverlay PRIVATE QOL_VERSION="${QOL_VERSION}")
 target_link_libraries(QOLOverlay PRIVATE imgui
-  d3d11 d3dcompiler dxgi dcomp dwmapi tdh iphlpapi ws2_32 advapi32 shell32 user32 gdi32 imm32 ole32)
+  d3d11 d3dcompiler dxgi dcomp dwmapi tdh pdh winhttp bcrypt iphlpapi ws2_32 advapi32 shell32 user32 gdi32 imm32 ole32)
 
 if(MSVC)
   target_compile_options(QOLOverlay PRIVATE /W4 /WX /permissive- /utf-8)

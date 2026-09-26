@@ -37,6 +37,9 @@ jobs:
           if (-not (Test-Path $iscc)) { choco install innosetup --no-progress -y | Out-Null }
           & $iscc "/DAppVersion=$env:QOL_VERSION" installer\QOLOverlay.iss
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          # The in-app updater only installs a download whose SHA-256 matches this file.
+          $hash = (Get-FileHash installer\Output\QOLOverlay-Setup.exe -Algorithm SHA256).Hash.ToLower()
+          "$hash  QOLOverlay-Setup.exe" | Out-File -Encoding ascii -NoNewline installer\Output\QOLOverlay-Setup.exe.sha256
 
       - uses: actions/upload-artifact@v4
         with:
@@ -44,6 +47,7 @@ jobs:
           path: |
             build/Release/QOLOverlay.exe
             installer/Output/QOLOverlay-Setup.exe
+            installer/Output/QOLOverlay-Setup.exe.sha256
 
       # Publishes (or refreshes) release v<version> with the installer, so the one-line install command
       # (releases/latest/download/QOLOverlay-Setup.exe) always gets the newest build of the release branch.
@@ -62,6 +66,8 @@ jobs:
             ```powershell
             $f="$env:TEMP\QOLOverlay-Setup.exe"; irm https://github.com/${{ github.repository }}/releases/latest/download/QOLOverlay-Setup.exe -OutFile $f; Start-Process $f
             ```
-          files: installer/Output/QOLOverlay-Setup.exe
+          files: |
+            installer/Output/QOLOverlay-Setup.exe
+            installer/Output/QOLOverlay-Setup.exe.sha256
           overwrite_files: true
           make_latest: true

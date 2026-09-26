@@ -153,7 +153,15 @@ static WatermarkData SampleData(const Config& c) {
   d.refreshHz = 240.0f;
   d.ping = {PingState::Ok, 23, "155.133.252.10"};
   d.time = "11:44 AM";
+  d.date = "Sat, Sep 26";
   d.user = "jokingtim";
+  d.game = "Counter-Strike 2";
+  d.session = "1:12:08";
+  d.cpu = 34;
+  d.gpu = 59;
+  d.ram = 48;
+  d.segments = c.segments;
+  d.showLow = c.showLow;
   return d;
 }
 
@@ -214,10 +222,75 @@ int main(int argc, char** argv) {
     ServiceTextures();
   };
 
+  // 0. Interaction regression test: pressing a tab or a player button must not count as a click outside
+  //    the menu (that bug closed the menu on every button press), and the buttons must fire.
+  {
+    Config c;
+    const Theme& theme = FindTheme(c.theme);
+    Menu menu;
+    const PlayerData player = SamplePlayer(cover);
+    const ImVec2 display(1100, 640);
+    bool outside = false;
+    MediaCommand command = MediaCommand::None;
+    auto step = [&](ImVec2 mouse, int button) {  // button: -1 = no change, 0 = release, 1 = press
+      io.AddMousePosEvent(mouse.x, mouse.y);
+      if (button >= 0) io.AddMouseButtonEvent(0, button == 1);
+      io.DisplaySize = display;
+      io.DeltaTime = 1.0f / 60.0f;
+      ImGui::NewFrame();
+      anim::BeginFrame(io.DeltaTime);
+      const FontFace& face = fonts.Find(c.font);
+      ApplyImGuiStyle(theme, 1.0f);
+      ui::g = ui::Context{&theme, 1.0f, face.medium, face.bold, 15.0f};
+      ImGui::PushFont(face.medium, 15.0f);
+      WatermarkStyle ws{&theme, face.medium, face.bold, 15.0f, c.opacity};
+      ImVec2 ppos(20, 6);  // clear of the menu window
+      PlayerEvents pev;
+      Player(&ppos, player, ws, true, ImVec2(0, 0), display, &pev);
+      if (pev.command != MediaCommand::None) command = pev.command;
+      MenuContext ctx{&c, &fonts, &games, {}, {}, EtwStatus::Running, Capture::None, "", &player, {}};
+      MenuEvents ev;
+      menu.Draw(ctx, 1.0f, ev);
+      outside |= ui::ClickedOutsideWindows();
+      ImGui::PopFont();
+      ImGui::Render();
+      ServiceTextures();
+    };
+    auto click = [&](ImVec2 p) {
+      for (int i = 0; i < 3; ++i) step(p, -1);
+      step(p, 1);
+      step(p, -1);
+      step(p, 0);
+      for (int i = 0; i < 3; ++i) step(p, -1);
+    };
+    for (int i = 0; i < 5; ++i) step(ImVec2(-100, -100), -1);  // let windows settle
+
+    // Menu is 700x480 centered; sidebar tab i is at y = top + 78 + i*38 (+ half a row).
+    const ImVec2 menuPos = (display - ImVec2(700, 480)) * 0.5f;
+    click(menuPos + ImVec2(88, 78 + 2 * 38 + 17));  // "Music"
+    const bool tabOk = menu.Tab() == 2 && !outside;
+    printf("tab click:    tab=%d outside=%d -> %s\n", menu.Tab(), outside, tabOk ? "OK" : "FAIL");
+
+    outside = false;
+    // Play button: second of the three buttons on the card's title row.
+    const float m = 15.0f, w = std::round(m * 21), pad = std::round(m * 0.6f), btn = std::round(m * 1.5f);
+    const float gap = std::round(m * 0.15f);
+    const ImVec2 card(20, 6);
+    const ImVec2 play(card.x + w - pad - btn * 0.5f - (btn + gap), card.y + pad + btn * 0.5f - m * 0.1f);
+    click(play);
+    const bool playOk = command == MediaCommand::PlayPause && !outside;
+    printf("player click: command=%d outside=%d -> %s\n", static_cast<int>(command), outside, playOk ? "OK" : "FAIL");
+
+    outside = false;
+    click(ImVec2(1050, 40));  // empty space
+    printf("empty click:  outside=%d -> %s\n", outside, outside ? "OK" : "FAIL");
+    if (!tabOk || !playOk || !outside) return 1;
+  }
+
   // 1. Watermark in several themes over a bright/dark "game" background.
   {
     const char* themes[] = {"Neverlose", "Catppuccin Mocha", "Midnight", "Catppuccin Latte", "Nord", "Gruvbox Dark"};
-    Canvas cv(900, 560);
+    Canvas cv(1240, 620);
     for (int f = 0; f < 3; ++f) {
       frame(cv.w, cv.h, [&] {
         float y = 16;
@@ -228,6 +301,17 @@ int main(int argc, char** argv) {
           WatermarkStyle ws{&FindTheme(tn), face.medium, face.bold, 15.0f, c.opacity};
           Watermark(ImGui::GetBackgroundDrawList(), ImVec2(20, y), SampleData(c), ws, true);
           y += 66;
+        }
+        {  // Everything on the bar
+          Config c;
+          c.logoText = "NL";
+          c.segments = {Seg::Fps, Seg::FrameTime, Seg::Ping, Seg::Game, Seg::Session, Seg::Date, Seg::Time,
+                        Seg::Cpu, Seg::Gpu, Seg::Ram, Seg::User};
+          c.showLow = false;
+          const FontFace& face = fonts.Find(c.font);
+          WatermarkStyle ws{&FindTheme("Neverlose"), face.medium, face.bold, 14.0f, c.opacity};
+          Watermark(ImGui::GetBackgroundDrawList(), ImVec2(20, y), SampleData(c), ws, true);
+          y += 60;
         }
         // Players: playing with cover, and the idle card.
         Config c;
@@ -245,10 +329,10 @@ int main(int argc, char** argv) {
   }
 
   // 2. Menu, one image per tab.
-  const char* tabNames[] = {"overlay", "music", "game", "theme", "font", "keybinds"};
-  for (int tab = 0; tab < 6; ++tab) {
+  const char* tabNames[] = {"overlay", "bar", "music", "game", "theme", "font", "keybinds", "about"};
+  for (int tab = 0; tab < 8; ++tab) {
     Config c;
-    c.theme = tab == 3 ? "Midnight" : "Catppuccin Mocha";
+    c.theme = tab == 4 ? "Midnight" : "Catppuccin Mocha";
     const Theme& theme = FindTheme(c.theme);
     Menu menu;
     menu.SelectTab(tab);
@@ -265,7 +349,8 @@ int main(int argc, char** argv) {
         Watermark(ImGui::GetBackgroundDrawList(), ImVec2(cv.w - 20 - Watermark(nullptr, {}, SampleData(c), ws, false).x, 14),
                   SampleData(c), ws, true);
         MenuContext ctx{&c, &fonts, &games, SampleData(c).ping, SampleData(c).fps, EtwStatus::Running,
-                        tab == 5 ? Capture::ToggleKey : Capture::None, "", &player};
+                        tab == 6 ? Capture::ToggleKey : Capture::None, "", &player,
+                        UpdateStatus{UpdateState::UpToDate, "0.3.0", ""}};
         ImVec2 ppos(40, cv.h - 40 - PlayerSize(15.0f).y);
         PlayerEvents pev;
         Player(&ppos, player, ws, true, ImVec2(0, 0), io.DisplaySize, &pev);

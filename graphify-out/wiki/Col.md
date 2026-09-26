@@ -1,22 +1,25 @@
 # Col()
 
-> God node · 19 connections · `src/ui/theme.h`
+> God node · 22 connections · `src/ui/theme.h`
 
 **Community:** [MenuContext](MenuContext.md)
 
 ## Connections by Relation
 
 ### calls
-- [Draw()](Draw.md) `INFERRED`
-- main() `INFERRED`
+- Draw() `INFERRED`
 - Draw `INFERRED`
+- main() `INFERRED`
 - Render `INFERRED`
 - TabGame `INFERRED`
 - Watermark() `INFERRED`
+- TabBar `INFERRED`
 - TabTheme `INFERRED`
+- TabAbout `INFERRED`
 - TabFont `INFERRED`
 - TabMusic `INFERRED`
 - Panel() `INFERRED`
+- GlyphButton() `INFERRED`
 - KeybindButton() `INFERRED`
 - Segmented() `INFERRED`
 - TextField() `INFERRED`

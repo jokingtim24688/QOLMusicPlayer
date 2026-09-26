@@ -1,9 +1,9 @@
 {
   "0": "app.h",
   "1": "MenuContext",
-  "2": "WatermarkData",
+  "2": "watermark.cpp",
   "3": "Config",
-  "4": "preview.cpp",
+  "4": "Canvas",
   "5": "App",
   "6": "Theme",
   "7": "Renderer",
@@ -24,8 +24,15 @@
   "22": "Layout",
   "23": "HotkeyName",
   "24": "Traffic",
-  "25": "External Overlay — Research & Plan",
+  "25": "Progress",
   "26": "QOL Overlay",
-  "27": "SetTarget",
-  "28": "OnNetworkSend"
+  "27": "OnNetworkSend",
+  "28": "Updater",
+  "29": "WatermarkData",
+  "30": "algorithm",
+  "31": "preview.cpp",
+  "32": "Tick",
+  "33": "Fonts",
+  "34": "FontFace",
+  "35": "LoadFile"
 }

@@ -1,6 +1,6 @@
 # Config
 
-> God node · 37 connections · `src/config/config.h`
+> God node · 39 connections · `src/config/config.h`
 
 **Community:** [Config](Config.md)
 
@@ -18,11 +18,9 @@
 - opacity `EXTRACTED`
 - corner `EXTRACTED`
 - logoText `EXTRACTED`
-- showFps `EXTRACTED`
+- segments `EXTRACTED`
 - showLow `EXTRACTED`
-- showPing `EXTRACTED`
-- showTime `EXTRACTED`
-- showUser `EXTRACTED`
+- dateFormat `EXTRACTED`
 - clock24h `EXTRACTED`
 - clockSeconds `EXTRACTED`
 - username `EXTRACTED`
@@ -30,6 +28,8 @@
 - playerSpotifyOnly `EXTRACTED`
 - playerHideWhenIdle `EXTRACTED`
 - playerX `EXTRACTED`
+- playerY `EXTRACTED`
+- pinnedExe `EXTRACTED`
 - *…and 6 more `defines` connection(s) not listed (lowest-degree first to go)*
 
 ### imports
@@ -41,10 +41,12 @@
 ### references
 - [App](App.md) `EXTRACTED`
 - [MenuContext](MenuContext.md) `EXTRACTED`
+- vector `EXTRACTED`
 - Hotkey `EXTRACTED`
 - SampleData() `EXTRACTED`
 - string `EXTRACTED`
 - Corner `EXTRACTED`
+- Seg `EXTRACTED`
 
 ---
 

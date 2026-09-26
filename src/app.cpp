@@ -49,6 +49,14 @@ int App::Run(HINSTANCE inst) {
   RegisterHotkeys();
   taskbarCreatedMsg_ = RegisterWindowMessageW(L"TaskbarCreated");
   TrayAdd();
+  if (!cfg_.lastVersion.empty() && cfg_.lastVersion != QOL_VERSION)
+    Balloon(APP_NAME_W L" updated", L"Now on version " QOL_VERSION_W L". Open the menu with Delete.");
+  if (cfg_.lastVersion != QOL_VERSION) {
+    cfg_.lastVersion = QOL_VERSION;
+    cfgDirty_ = true;
+    SaveIfDirty();
+  }
+  updater_.Start(window_.Hwnd());
 
   etw_.Start(&fps_, &ping_);
   ping_.Start();
@@ -73,6 +81,7 @@ int App::Run(HINSTANCE inst) {
     }
   }
 
+  updater_.Stop();
   media_.Stop();
   ping_.Stop();
   etw_.Stop();
@@ -105,27 +114,38 @@ void App::Tick(bool force) {
 
   games_.Update(fps_, cfg_.pinnedExe, window_.Hwnd());
   const DWORD pid = games_.Pid();
-  const bool wantPing = cfg_.showPing && pid != 0;
+  const auto& segs = cfg_.segments;
+  const bool showPing = HasSeg(segs, Seg::Ping);
+  const bool wantPing = showPing && pid != 0;
   etw_.EnableNetwork(wantPing);
   ping_.SetTarget(wantPing ? pid : 0);
 
   WatermarkData d;
   d.logo = cfg_.logoText;
-  d.showFps = cfg_.showFps;
+  d.segments = segs;
   d.showLow = cfg_.showLow;
-  d.showPing = cfg_.showPing;
-  d.showTime = cfg_.showTime;
-  d.showUser = cfg_.showUser;
   d.fps = pid ? fps_.Sample(pid) : FpsSample{};
   const EtwStatus etw = etw_.Status();
   if (etw == EtwStatus::NeedsAdmin) d.fpsProblem = "needs admin";
   else if (etw != EtwStatus::Running) d.fpsProblem = "unavailable";
   else if (!pid) d.fpsProblem = "no game";
   else if (!d.fps.valid) d.fpsProblem = "paused";
-  d.ping = cfg_.showPing ? ping_.Sample() : PingSample{};
-  if (cfg_.showPing && !pid) d.ping.state = PingState::NoGame;
+  d.ping = showPing ? ping_.Sample() : PingSample{};
+  if (showPing && !pid) d.ping.state = PingState::NoGame;
   d.time = ClockText(cfg_.clock24h, cfg_.clockSeconds);
+  d.date = DateText(cfg_.dateFormat);
   d.user = cfg_.username.empty() ? windowsUser_ : cfg_.username;
+  if (pid) {
+    d.game = games_.Title();
+    d.session = DurationText(games_.SessionSeconds());
+  }
+  const bool wantCpu = HasSeg(segs, Seg::Cpu), wantGpu = HasSeg(segs, Seg::Gpu), wantRam = HasSeg(segs, Seg::Ram);
+  if (wantCpu || wantGpu || wantRam) {
+    stats_.Update(wantGpu);
+    d.cpu = wantCpu ? stats_.Cpu() : -1.0f;
+    d.gpu = wantGpu ? stats_.Gpu() : -1.0f;
+    d.ram = wantRam ? stats_.Ram() : -1.0f;
+  }
 
   // Refresh rate only changes with the monitor (or a mode switch), so it's looked up once per monitor.
   HMONITOR mon = games_.Monitor() ? games_.Monitor() : MonitorFromPoint(POINT{0, 0}, MONITOR_DEFAULTTOPRIMARY);
@@ -163,6 +183,14 @@ void App::Tick(bool force) {
     lastSignature_ = sig;
     needRedraw_ = true;
   }
+  // Updates install on their own only when no game is running and the menu is closed.
+  const UpdateState us = updater_.Status().state;
+  if (us != lastUpdateState_) {
+    lastUpdateState_ = us;
+    if (menuOpen_) needRedraw_ = true;
+  }
+  if (us == UpdateState::Ready && cfg_.autoUpdate && pid == 0 && !menuOpen_) InstallUpdate();
+
   // Borderless games sometimes push themselves above other topmost windows; take the spot back.
   if (tickCount_ % 2 == 0 && shown_ && !menuOpen_) window_.ReassertTopmost();
 }
@@ -266,19 +294,20 @@ void App::Render() {
   }
 
   if (menuVisible) {
-    MenuContext ctx{&cfg_, &fonts_, &games_, data_.ping, data_.fps, etw_.Status(), capture_, keyError_, &player_};
+    MenuContext ctx{&cfg_, &fonts_, &games_, data_.ping, data_.fps, etw_.Status(), capture_, keyError_, &player_,
+                    updater_.Status()};
     MenuEvents ev;
     menu_.Draw(ctx, menuT_, ev);
     if (ev.startCapture != Capture::None) StartCapture(ev.startCapture);
     else if (ev.cancelCapture) FinishCapture(VK_ESCAPE);
+    if (ev.checkUpdates) updater_.CheckNow();
+    if (ev.installUpdate) InstallUpdate();
     if (ev.changed) {
       cfgDirty_ = true;
       Tick(true);  // rebuild watermark data with the new settings right away
     }
-    // Click outside the menu closes it, like any popover.
-    if (menuOpen_ && capture_ == Capture::None && ImGui::IsMouseClicked(0) &&
-        !ImGui::IsWindowHovered(ImGuiHoveredFlags_AnyWindow))
-      CloseMenu();
+    // Click outside the menu (and the player) closes it, like any popover.
+    if (menuOpen_ && capture_ == Capture::None && ui::ClickedOutsideWindows()) CloseMenu();
   }
   if (cfg_.theme != appliedTheme_) {
     appliedTheme_ = cfg_.theme;
@@ -383,6 +412,24 @@ void App::FinishCapture(unsigned vk) {
   needRedraw_ = true;
 }
 
+void App::InstallUpdate() {
+  cfgDirty_ = true;
+  SaveIfDirty();
+  if (updater_.Install()) running_ = false;  // the installer closes us anyway; leave cleanly first
+}
+
+void App::Balloon(const wchar_t* title, const wchar_t* text) {
+  NOTIFYICONDATAW nid{};
+  nid.cbSize = sizeof(nid);
+  nid.hWnd = window_.Hwnd();
+  nid.uID = 1;
+  nid.uFlags = NIF_INFO;
+  nid.dwInfoFlags = NIIF_INFO | NIIF_RESPECT_QUIET_TIME;
+  wcscpy_s(nid.szInfoTitle, title);
+  wcscpy_s(nid.szInfo, text);
+  Shell_NotifyIconW(NIM_MODIFY, &nid);
+}
+
 void App::SaveIfDirty() {
   if (!cfgDirty_) return;
   cfg_.Save();
@@ -470,6 +517,9 @@ LRESULT App::HandleMessage(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp) {
     case kTrayMsg:
       if (LOWORD(lp) == WM_LBUTTONUP) OpenMenu();
       else if (LOWORD(lp) == WM_RBUTTONUP || LOWORD(lp) == WM_CONTEXTMENU) TrayMenu();
+      return 0;
+    case Updater::kReadyMsg:
+      needRedraw_ = true;  // Tick installs it once no game is running
       return 0;
     case WM_DISPLAYCHANGE:
     case WM_DPICHANGED:

@@ -1,6 +1,6 @@
 # App
 
-> God node · 73 connections · `src/app.h`
+> God node · 81 connections · `src/app.h`
 
 **Community:** [App](App.md)
 
@@ -10,49 +10,50 @@
 - [app.h](app.h.md) `EXTRACTED`
 
 ### defines
-- [HandleMessage](HandleMessage.md) `EXTRACTED`
 - Run `EXTRACTED`
+- [HandleMessage](HandleMessage.md) `EXTRACTED`
 - Render `EXTRACTED`
-- Tick `EXTRACTED`
+- [Tick](Tick.md) `EXTRACTED`
 - FinishCapture `EXTRACTED`
 - TrayMenu `EXTRACTED`
 - CloseMenu `EXTRACTED`
+- SaveIfDirty `EXTRACTED`
 - ToggleOverlay `EXTRACTED`
 - RegisterHotkeys `EXTRACTED`
-- SaveIfDirty `EXTRACTED`
+- InstallUpdate `EXTRACTED`
 - MsUntilNextTick `EXTRACTED`
 - OpenMenu `EXTRACTED`
 - StartCapture `EXTRACTED`
+- Balloon `EXTRACTED`
 - TrayAdd `EXTRACTED`
 - TrayRemove `EXTRACTED`
 - WndProc `EXTRACTED`
 - cfg_ `EXTRACTED`
 - window_ `EXTRACTED`
-- renderer_ `EXTRACTED`
-- hotkeys_ `EXTRACTED`
-- *…and 32 more `defines` connection(s) not listed (lowest-degree first to go)*
+- *…and 37 more `defines` connection(s) not listed (lowest-degree first to go)*
 
 ### references
 - [Config](Config.md) `EXTRACTED`
 - [Renderer](Renderer.md) `EXTRACTED`
-- [MediaProvider](MediaProvider.md) `EXTRACTED`
+- [Updater](Updater.md) `EXTRACTED`
 - [WatermarkData](WatermarkData.md) `EXTRACTED`
-- [EtwSession](EtwSession.md) `EXTRACTED`
 - [GameSelector](GameSelector.md) `EXTRACTED`
-- PlayerData `EXTRACTED`
+- [MediaProvider](MediaProvider.md) `EXTRACTED`
 - string `EXTRACTED`
+- [EtwSession](EtwSession.md) `EXTRACTED`
+- PlayerData `EXTRACTED`
 - [OverlayWindow](OverlayWindow.md) `EXTRACTED`
 - Menu `EXTRACTED`
+- SystemStats `EXTRACTED`
 - [Hotkeys](Hotkeys.md) `EXTRACTED`
-- Fonts `EXTRACTED`
+- [Fonts](Fonts.md) `EXTRACTED`
 - ThemeAnimator `EXTRACTED`
 - [FpsProvider](FpsProvider.md) `EXTRACTED`
 - [PingProvider](PingProvider.md) `EXTRACTED`
 - ID3D11ShaderResourceView `EXTRACTED`
 - HWND `EXTRACTED`
 - Capture `EXTRACTED`
-- UINT `EXTRACTED`
-- HMONITOR `EXTRACTED`
+- *…and 3 more `references` connection(s) not listed (lowest-degree first to go)*
 
 ---
 

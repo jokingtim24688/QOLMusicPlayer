@@ -1,0 +1,16 @@
+#include "resource.h"
+
+1 24 "app.manifest"
+
+IDR_FONT_GEIST_MEDIUM         RCDATA "Geist-Medium.ttf"
+IDR_FONT_GEIST_BOLD           RCDATA "Geist-Bold.ttf"
+IDR_FONT_GEISTMONO_MEDIUM     RCDATA "GeistMono-Medium.ttf"
+IDR_FONT_GEISTMONO_BOLD       RCDATA "GeistMono-Bold.ttf"
+IDR_FONT_JETBRAINSMONO_MEDIUM RCDATA "JetBrainsMono-Medium.ttf"
+IDR_FONT_JETBRAINSMONO_BOLD   RCDATA "JetBrainsMono-Bold.ttf"
+IDR_FONT_PLEXSANS_MEDIUM      RCDATA "IBMPlexSans-Medium.ttf"
+IDR_FONT_PLEXSANS_BOLD        RCDATA "IBMPlexSans-Bold.ttf"
+IDR_FONT_SPACEGROTESK_MEDIUM  RCDATA "SpaceGrotesk-Medium.ttf"
+IDR_FONT_SPACEGROTESK_BOLD    RCDATA "SpaceGrotesk-Bold.ttf"
+IDR_FONT_MANROPE_MEDIUM       RCDATA "Manrope-Medium.ttf"
+IDR_FONT_MANROPE_BOLD         RCDATA "Manrope-Bold.ttf"

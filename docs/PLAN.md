@@ -1,5 +1,11 @@
 # External Overlay — Research & Plan
 
+> **Status (2026-09-26): v1 implemented.** Stack: C++20, Win32, D3D11 + DirectComposition, Dear ImGui 1.92.9.
+> v1 scope as built: watermark (FPS + 1% low, ping, clock, username), keybinds (menu/show-hide), animated
+> menu with theme and font pickers. See README.md for usage and `src/` for code. Config is a small
+> key=value file instead of JSON (no JSON dependency needed). Inter and Fira Code weren't added because only
+> variable/unbuilt font files were available; they can be added later as static TTFs.
+
 Goal: a **Neverlose / Orbit / Krypton-style HUD** (watermark bar, indicator panels) that runs as a
 **separate program**, never touches the game process, and is therefore in the same safety class
 as Discord's overlay, Crosshair X or NVIDIA's overlay.

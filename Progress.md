@@ -15,6 +15,22 @@
   honestly in ImGui (optional real DWM acrylic, off by default), one motion moment, tabular
   figures, FPS colors tied to refresh rate, and actionable error states.
 
+## 2026-09-26 — v1 built
+- Stack: C++20, Win32, D3D11 + DirectComposition, Dear ImGui 1.92.9 (FetchContent), CMake. Static exe (~4 MB, 2 MB is fonts).
+- Watermark: FPS + 1% low (ETW DXGI/D3D9 present events), ping (Kernel-Network ETW picks the game's busiest
+  remote address, then ICMP), local clock, username. Tabular digits so numbers don't jitter.
+- Menu (Insert): Overlay / Game / Theme / Font / Keybinds tabs. Spring animations: open/close zoom and fade,
+  sliding tab highlight, content slide-in, toggle knobs, theme color crossfade, scroll fade.
+- 12 themes (Catppuccin x4, Midnight, Neverlose, Tokyo Night, Dracula, Nord, Gruvbox Dark, Rosé Pine, One Dark),
+  6 fonts (Geist, Geist Mono, JetBrains Mono, IBM Plex Sans, Space Grotesk, Manrope).
+- Low resources: redraws ~1/s when the menu is closed, the window shrinks to the watermark's rectangle, vsync only while animating.
+- Anti-cheat safety: no OpenProcess on the game (Toolhelp for names), no hooks, RegisterHotKey, no drivers.
+- Verified: mingw-w64 cross-compile is clean with -Wall -Wextra -Werror. The UI is rendered to PNG via
+  tools/preview (docs/screenshots/). Not yet run on real Windows: the user needs to test it.
+- CI: .github/workflows/build.yml builds with MSVC on windows-latest and uploads QOLOverlay.exe.
+- Name: placeholder "QOL Overlay" (APP_NAME_W in src/app_info.h). The user was asked to pick a name.
+
 ## Next
-- User answers the open questions in docs/PLAN.md §4.
-- Then start M0 (skeleton overlay window).
+- User tests on Windows (CS2 borderless): FPS vs cl_showfps, ping vs scoreboard, CPU use at idle.
+- Pick the final name.
+- Later: more themes/fonts, Vulkan/OpenGL FPS (DxgKrnl events), frametime graph, now-playing widget.
